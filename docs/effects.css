@@ -95,3 +95,30 @@ body::after{content:'';position:fixed;inset:0;z-index:999;pointer-events:none;op
 .hero h1,.contact h2,.section-head h2,.about h2{letter-spacing:-.035em}
 h1 em,h2 em,.hero h1 em,.contact h2 em,.about-large em{letter-spacing:-.005em;word-spacing:.04em}
 @media(max-width:560px){.hero h1{font-size:clamp(32px,9.6vw,40px)}}
+
+/* Contact as a boarding pass: RGN to LAX. Paper, perforation and print, no shadows. */
+.contact-bottom{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,640px);align-items:end;gap:40px}
+.contact-bottom>p{max-width:340px;line-height:1.6}
+.boarding-pass{--pass-ink:var(--text);--pass-paper:var(--surface);display:grid;grid-template-columns:1fr 190px;border:1px solid var(--line);border-radius:14px;background:var(--pass-paper);color:var(--pass-ink);position:relative;font-family:'Instrument Sans',Arial,sans-serif}
+.boarding-pass::before,.boarding-pass::after{content:'';position:absolute;right:190px;width:22px;height:22px;margin-right:-11px;border-radius:50%;background:var(--bg);border:1px solid var(--line)}
+.boarding-pass::before{top:-12px;clip-path:inset(50% 0 0 0)}.boarding-pass::after{bottom:-12px;clip-path:inset(0 0 50% 0)}
+.pass-main{padding:24px 28px;display:grid;gap:20px}
+.pass-head,.pass-admit,.pass-grid dt{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.pass-head{display:flex;justify-content:space-between}
+.pass-route{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:16px}
+.pass-route b{display:block;font-size:clamp(34px,4vw,48px);font-weight:600;letter-spacing:-.02em;line-height:1}
+.pass-route small{font-size:12px;color:var(--muted)}
+.pass-route div:last-child{text-align:right}
+.pass-path{width:100%;height:auto;color:var(--muted)}
+.pass-grid{display:grid;grid-template-columns:repeat(4,auto);gap:12px 20px;margin:0;padding-top:16px;border-top:1px solid var(--line)}
+.pass-grid dd{margin:4px 0 0;font-size:13px;font-weight:500}
+.pass-main .pill{justify-self:start}
+.pass-stub{border-left:1.5px dashed var(--line);padding:24px 22px;display:flex;flex-direction:column;gap:16px}
+.pass-links{list-style:none;margin:0;padding:0;display:grid;gap:4px}
+.pass-links a{display:inline-flex;align-items:center;min-height:36px;font-size:13px;border-bottom:1px solid var(--line)}
+.pass-links a:hover{border-color:var(--text)}
+.pass-code{margin-top:auto;height:38px;opacity:.8;background:repeating-linear-gradient(90deg,var(--pass-ink) 0 2px,transparent 2px 4px,var(--pass-ink) 4px 5px,transparent 5px 8px,var(--pass-ink) 8px 11px,transparent 11px 13px)}
+.work .section-head p a{border-bottom:1px solid var(--line)}
+.work .section-head p a:hover{border-color:var(--text)}
+@media(max-width:900px){.contact-bottom{grid-template-columns:1fr;align-items:start}}
+@media(max-width:600px){.boarding-pass{grid-template-columns:1fr}.boarding-pass::before,.boarding-pass::after{display:none}.pass-stub{border-left:0;border-top:1.5px dashed var(--line)}.pass-grid{grid-template-columns:1fr 1fr}.pass-main{padding:22px 20px}}

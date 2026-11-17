@@ -1,28 +1,48 @@
-# Portfolio 2026
+# Zaw Lin Naing · Portfolio
 
-A responsive portfolio with Framer Motion animations built with HTML, CSS, and TypeScript.
+My personal site: https://normanlinn.github.io/portfolio/
 
-Open dist/index.html to view locally, or serve the dist folder with any static web server.
+It shows four projects I built (LAXCommute, Yay Kyaw Nights, Burman Tea and Derivatives Field Guide), a short introduction, my toolkit and a way to get in touch.
 
-## Personalize
+## How it is built
 
-- Replace “YOUR NAME” and “Your Name” in dist/index.html.
-- Update the role, biography, and toolkit in dist/index.html.
-- Replace the contact-button handler in src/script.ts with a real contact link, and change the button to an anchor with a mailto URL in dist/index.html.
-- Colors, responsive layouts, and animations are in dist/style.css.
+The page is hand-written HTML and CSS in `dist/`. Interactivity and motion are written in TypeScript in `src/` and bundled with esbuild; animation uses Framer Motion's browser API. There is no framework, server or database.
 
-The project showcase includes LAXCommute, Yay Kyaw Nights, Burman Tea, and Derivatives Field Guide. Contact is not connected.
+```bash
+npm ci
+npm run build   # type-checks, bundles src/ into dist/, then copies dist/ to docs/
+npm test        # checks the built site in docs/
+```
 
-Google Fonts are optional: system sans-serif fonts remain available when offline.
+GitHub Pages publishes `docs/` on every push to `main`. The build adds a content hash to each stylesheet and script link so visitors never get a new page with old cached styles.
 
-## Motion
+## What the tests check
 
-Run npm ci, then npm run build after editing src/motion.ts. The bundled dist/motion.js is included for static hosting and offline preview. Animations include staggered headlines, scroll reveals, spring hover/press feedback, reading progress, and dialog entrances. Reduced-motion preferences disable these effects, including when changed during a visit.
+- every local file the page refers to exists
+- every email link goes to the right address
+- links that open a new tab use `rel="noopener"`
+- the content security policy and referrer policy are present
+- search, share-card and structured-data metadata is complete, and every project in the structured data is linked on the page
+- the sitemap and `llms.txt` point at the live site
+- the source has no empty `catch` blocks or stray `console.log`
 
-## TypeScript development
+The "Repository health" workflow runs `npm audit`, the build and these tests on every push and pull request.
 
-The source is in src/script.ts, src/motion.ts, and src/dom.ts. Run npm ci, npm run typecheck, and npm run build. Edit TypeScript source rather than generated dist JavaScript. Strict checking includes DOM elements, dialog content, and motion options. Serve dist to preview the built website.
+## Search and AI discoverability
 
-## Personal hero media
+- `<head>` has a title, description, canonical URL, Open Graph and Twitter card tags, and JSON-LD describing me (`Person`) and my projects.
+- `sitemap.xml` lists the pages worth indexing. GitHub Pages only reads `robots.txt` from the root of `normanlinn.github.io`, so submit the sitemap in Google Search Console.
+- `llms.txt` is a plain-language summary for AI assistants.
 
-The supplied reference videos are design references and are not published as your identity. Add your own video and portrait to dist/assets, then set their relative paths in src/profile.ts and run npm run build. The hero video supports native play/pause controls and pauses automatically for reduced-motion preferences.
+## Editing
+
+- Text and layout: `dist/index.html` and the stylesheets in `dist/` (`effects.css` is the newest layer).
+- Project popups and skills: `src/script.ts` and `src/skills.ts`, then `npm run build`.
+- Résumé: edit `resume/resume.html`, open it in Chrome, print to PDF and save over `dist/assets/zaw-lin-naing-resume.pdf`.
+- Share image: edit `resume/social-card.html`, then render it at 1200 × 630:
+
+```bash
+"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless=new --hide-scrollbars --window-size=1200,630 --allow-file-access-from-files --screenshot="$PWD/social.png" "file://$PWD/resume/social-card.html"
+```
+
+Fonts are Instrument Sans and Instrument Serif (SIL Open Font License, see `dist/assets/font-license.txt`).

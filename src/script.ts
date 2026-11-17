@@ -12,13 +12,20 @@ function applyTheme(dark: boolean) {
   themeButton.setAttribute('aria-label', dark ? 'Switch to light theme' : 'Switch to dark theme');
   themeButton.setAttribute('aria-pressed', String(dark));
 }
-let saved: string | null = null;
-try { saved = localStorage.getItem('portfolio-theme'); } catch {}
+// Storage can be blocked (private browsing, strict privacy settings). The theme then follows the
+// system setting on each visit instead of being remembered, which is the right fallback.
+function readSavedTheme(): string | null {
+  try { return localStorage.getItem('portfolio-theme'); } catch { return null; }
+}
+function saveTheme(theme: 'dark' | 'light'): void {
+  try { localStorage.setItem('portfolio-theme', theme); } catch { /* not remembered: see readSavedTheme */ }
+}
+const saved = readSavedTheme();
 applyTheme(saved === 'dark' || (!saved && matchMedia('(prefers-color-scheme: dark)').matches));
 themeButton.addEventListener('click', () => {
   const dark = !document.body.classList.contains('dark');
   applyTheme(dark);
-  try { localStorage.setItem('portfolio-theme', dark ? 'dark' : 'light'); } catch {}
+  saveTheme(dark ? 'dark' : 'light');
 });
 const dialog = requiredElement<HTMLDialogElement>('#case-dialog');
 function showDialog(title: string, intro: string, sections: readonly DialogSection[]) {
@@ -69,7 +76,7 @@ document.querySelectorAll<HTMLButtonElement>('.skill-filter').forEach(button => 
   document.querySelectorAll('.skill-filter').forEach(element => element.setAttribute('aria-pressed', String(element === button)));
   document.querySelectorAll<HTMLElement>('[data-skill]').forEach(element => { element.hidden = button.dataset.category !== 'All' && element.dataset.category !== button.dataset.category; });
 }));
-if (profileMedia.heroImage && !profileMedia.heroVideo) {
+if (profileMedia.heroImage) {
   const stage = requiredElement<HTMLElement>('.hero-center');
   const figure = document.createElement('figure');
   figure.className = 'coding-figure';
@@ -83,21 +90,6 @@ if (profileMedia.heroImage && !profileMedia.heroVideo) {
   figure.append(image, caption);
   stage.replaceChildren(figure);
   stage.classList.add('has-coding-portrait');
-}
-if (profileMedia.heroVideo) {
-  const stage = requiredElement<HTMLElement>('.hero-center');
-  const video = document.createElement('video');
-  video.src = profileMedia.heroVideo;
-  video.className = 'intro-video';
-  video.loop = true;
-  video.muted = true;
-  video.playsInline = true;
-  video.controls = true;
-  video.setAttribute('aria-label', 'Introduction from Zaw Lin Naing');
-  stage.replaceChildren(video);
-  const preference = matchMedia('(prefers-reduced-motion: reduce)');
-  const playback = () => { if (preference.matches) video.pause(); else void video.play().catch(() => {}); };
-  playback(); preference.addEventListener('change', playback);
 }
 if (profileMedia.portrait) {
   const portrait = document.createElement('img');
