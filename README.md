@@ -26,7 +26,7 @@ GitHub Pages publishes `docs/` on every push to `main`. The build adds a content
 - the sitemap and `llms.txt` point at the live site
 - the source has no empty `catch` blocks or stray `console.log`
 
-The "Repository health" workflow runs `npm audit`, the build and these tests on every push and pull request.
+Run `npm run build && npm test` before pushing. The "Repository health" workflow runs `npm audit` on every push and pull request.
 
 ## Search and AI discoverability
 
