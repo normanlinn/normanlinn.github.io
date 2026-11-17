@@ -1,7 +1,5 @@
-/** Add your own local media paths after placing the files in dist/assets/. */
-export const profileMedia: { heroImage: string | null; heroVideo: string | null; portrait: string | null } = {
+/** Images used in the hero and on the ID card, relative to dist/. */
+export const profileMedia: { heroImage: string | null; portrait: string | null } = {
   heroImage: 'assets/zaw-coding-on.webp',
-  heroVideo: null,
   portrait: 'assets/zaw-id-upright.webp',
 };
-

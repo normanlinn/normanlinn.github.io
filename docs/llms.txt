@@ -1,0 +1,22 @@
+# Zaw Lin Naing
+
+> Zaw Lin Naing (also known as Norman Linn) is a software developer in Los Angeles, California. He builds TypeScript web apps that solve everyday problems, and studies at El Camino College. Before moving into software he worked in aviation customer service at Los Angeles International Airport (LAX), which led to his first app, LAXCommute.
+
+He is open to remote or part-time web development work.
+
+- Portfolio: https://normanlinn.github.io/portfolio/
+- Email: mrzawlinnaing1001@gmail.com
+- GitHub: https://github.com/normanlinn
+- LinkedIn: https://www.linkedin.com/in/zawlinnaing
+- Résumé (PDF): https://normanlinn.github.io/portfolio/assets/zaw-lin-naing-resume.pdf
+
+## Projects
+
+- [LAXCommute](https://employeeshuttlelax.com/): an installable web app (PWA) with live LAX employee shuttle positions and arrival predictions for the South, East and West lots, in English, Spanish and Burmese. Built with React, TypeScript, Supabase and Cloudflare Workers. Source: https://github.com/normanlinn/LAXCommute
+- [Yay Kyaw Nights](https://yaykyawfair.vercel.app/): a walkable 3D night street fair inspired by Yangon's Yay Kyaw, with 12 zones, first-person rides, a Burmese-speaking crowd and browser-to-browser multiplayer over WebRTC. Built with TypeScript, Three.js and the Web Audio API. Source: https://github.com/normanlinn/yaykyawfair
+- [Burman Tea](https://burmantea.vercel.app/): a mobile-first website for a Burmese milk tea and matcha shop in Westwood, Los Angeles, with the menu, pickup hours and directions in English and Burmese.
+- [Derivatives Field Guide](https://calculus-study-site.vercel.app/): an interactive calculus study site with 77 practice problems, 8 draggable graphs and a practice quiz. Built with Next.js, TypeScript and KaTeX. Source: https://github.com/normanlinn/calculus-study-site
+
+## Skills
+
+TypeScript, JavaScript, HTML, CSS, React, Next.js, Three.js, WebRTC, Web Audio API, Supabase, Cloudflare Workers, progressive web apps, accessibility, responsive design, Git and GitHub.

@@ -1,0 +1,35 @@
+<!doctype html>
+<!-- Source for dist/assets/social.png (1200x630). Render with headless Chrome: see README. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Social card</title>
+<style>
+  @font-face { font-family: 'Instrument Sans'; src: url(../dist/assets/instrument-sans.woff2) format('woff2'); font-weight: 400 700; }
+  @font-face { font-family: 'Instrument Serif'; src: url(../dist/assets/instrument-serif-italic.woff2) format('woff2'); font-style: italic; }
+  * { margin: 0; box-sizing: border-box; }
+  html, body { width: 1200px; height: 630px; overflow: hidden; }
+  body { position: relative; background: #f5f3ec; color: #23242a; font-family: 'Instrument Sans', Arial, sans-serif; }
+  .terrain { position: absolute; inset: -40px; background: #23242a; opacity: .09;
+    -webkit-mask: url(../dist/assets/contours.svg) center/cover no-repeat; mask: url(../dist/assets/contours.svg) center/cover no-repeat; }
+  .name { position: absolute; left: 64px; top: 34px; font-weight: 700; font-size: 250px; line-height: 1; letter-spacing: -.03em;
+    color: transparent; background: linear-gradient(105deg, #ece5d8, #dccab0 50%, #efe9df); -webkit-background-clip: text; background-clip: text; white-space: nowrap; }
+  .portrait { position: absolute; right: 70px; bottom: -6px; height: 600px; }
+  .copy { position: absolute; left: 72px; bottom: 76px; }
+  .eyebrow { font-size: 18px; letter-spacing: .2em; color: #66676d; margin-bottom: 22px; }
+  h1 { font-size: 76px; font-weight: 600; line-height: 1.02; letter-spacing: -.035em; }
+  h1 em { font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: 1.06em; }
+  .meta { margin-top: 26px; font-size: 22px; color: #66676d; }
+</style>
+</head>
+<body>
+  <div class="terrain"></div>
+  <div class="name">ZAW LIN</div>
+  <img class="portrait" src="../dist/assets/zaw-coding-on.webp" alt="">
+  <div class="copy">
+    <p class="eyebrow">ZAW LIN NAING · SOFTWARE DEVELOPER</p>
+    <h1>Thoughtful code.<br><em>Human experiences.</em></h1>
+    <p class="meta">Los Angeles · normanlinn.github.io/portfolio</p>
+  </div>
+</body>
+</html>
