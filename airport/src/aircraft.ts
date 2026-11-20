@@ -44,12 +44,21 @@ export function buildAirliner(maxAnisotropy:number){
   const atlas=document.createElement('canvas');atlas.width=image.width;atlas.height=image.height;
   const ctx=atlas.getContext('2d')!;ctx.drawImage(image,0,0);
   const pixels=ctx.getImageData(0,0,atlas.width,atlas.height);
+  const blue=new Uint8Array(atlas.width*atlas.height);
   for(let y=0;y<atlas.height;y++)for(let x=0;x<atlas.width;x++){
-   const i=(y*atlas.width+x)*4,r=pixels.data[i],g=pixels.data[i+1],b=pixels.data[i+2];
-   const nx=x/atlas.width,ny=y/atlas.height;
-   const windowRow=nx<.72&&((ny>.07&&ny<.12)||(ny>.25&&ny<.31)||(ny>.67&&ny<.73)||(ny>.85&&ny<.91));
-   const engineFan=nx>.81&&nx<.94&&ny<.145;
-   if(!windowRow&&!engineFan&&b-r>18&&b>g*1.08){pixels.data[i]=238;pixels.data[i+1]=241;pixels.data[i+2]=243;}
+   const index=y*atlas.width+x,i=index*4,r=pixels.data[i],g=pixels.data[i+1],b=pixels.data[i+2];
+   const engineFan=x/atlas.width>.81&&x/atlas.width<.94&&y/atlas.height<.145;
+   if(!engineFan&&b-r>18&&b>g*1.08)blue[index]=1;
+  }
+  // Preserve individual dark window marks; remove the large connected livery panels.
+  for(let start=0;start<blue.length;start++)if(blue[start]){
+   const region=[start];blue[start]=0;
+   for(let cursor=0;cursor<region.length;cursor++){
+    const index=region[cursor],x=index%atlas.width;
+    for(const next of [x>0?index-1:-1,x<atlas.width-1?index+1:-1,index-atlas.width,index+atlas.width])
+     if(next>=0&&next<blue.length&&blue[next]){blue[next]=0;region.push(next);}
+   }
+   if(region.length>96)for(const index of region){const i=index*4;pixels.data[i]=238;pixels.data[i+1]=241;pixels.data[i+2]=243;}
   }
   ctx.putImageData(pixels,0,0);
   const map=new THREE.CanvasTexture(atlas);map.flipY=original.flipY;map.colorSpace=THREE.SRGBColorSpace;map.anisotropy=maxAnisotropy;
