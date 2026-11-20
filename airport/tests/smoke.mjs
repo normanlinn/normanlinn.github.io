@@ -9,6 +9,10 @@ try{
  await page.context().grantPermissions(['clipboard-write'],{origin:base});
  await page.goto(base,{waitUntil:'networkidle'});
  await page.waitForFunction(()=>window.terminalState?.ready);
+ await page.waitForFunction(()=>window.terminalState.aircraft.loaded);
+ assert.equal(await page.evaluate(()=>window.terminalState.aircraft.source),'amvlab-a350');
+ assert.equal(await page.evaluate(()=>window.terminalState.aircraft.fanCount),2);
+ assert.equal(await page.evaluate(()=>window.terminalState.aircraft.wheelCount),10);
  assert.equal(await page.evaluate(()=>window.terminalState.mode),'scroll');
  assert.equal(await page.locator('#joystick,#mouse-look,.crosshair').count(),0);
  const before=await page.evaluate(()=>window.terminalState.position);
@@ -28,6 +32,7 @@ try{
  await page.locator('#lounge [data-directory="lounge"]').click();await page.locator('#copy-email').click();await page.waitForFunction(()=>document.querySelector('#copy-email').textContent==='Copied!');await page.locator('#detail .dialog-close').click();
  await page.locator('#watch-runway').click();
  await page.waitForFunction(()=>window.terminalState.chapter==='runway');
+ await page.locator('#runway-view').click();assert.equal(await page.locator('#runway-view').getAttribute('aria-pressed'),'true');await page.locator('#runway-view').click();
  await page.locator('#watch-landing').click();
  await page.waitForFunction(()=>window.terminalState.aircraft.phase==='landing'&&window.terminalState.aircraft.position.x< -50);
  const aircraftX=await page.evaluate(()=>window.terminalState.aircraft.position.x);

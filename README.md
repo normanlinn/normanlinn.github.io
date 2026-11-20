@@ -22,7 +22,7 @@ The published portfolio is a scroll-guided **Three.js + TypeScript** airport exp
 - **Developer pass:** read about my path from aviation customer service at LAX to building software.
 - **First Class Lounge:** open a boarding-pass contact panel, copy my email, or view my résumé.
 
-There are moving luggage cases, opening security doors, textured stone and wood finishes, soft environmental lighting, desktop floor reflections, a smooth airliner with animated engine fans and retracting gear, landing and takeoff sequences viewed through the terminal glass, smooth camera journeys, a pause-ambience control, and a directory for opening every project directly.
+There are moving luggage cases, opening security doors, textured stone and wood finishes, soft environmental lighting, desktop floor reflections, a licensed A350 airframe with SWISS-inspired livery, animated engine fans, and retracting gear, landing and takeoff sequences viewed through the terminal glass, smooth camera journeys, a pause-ambience control, and a directory for opening every project directly.
 
 ### Controls
 
@@ -105,7 +105,7 @@ The build preserves the Google Search Console verification file, sitemap, résum
 
 The concept uses Swiss-inspired typography, white and charcoal surfaces, precise red wayfinding, and a first-class boarding-pass treatment. The aircraft and HON CIRCLE styling are part of the requested personal concept; this is a developer portfolio, not an airline booking service.
 
-The image below is **art direction**, while the playable prototype uses original lightweight geometry. Matching the concept’s detailed architectural materials and character models is a later art pass.
+The image below is **art direction**, while the scroll prototype uses custom terminal geometry and a licensed A350 model. Matching the concept’s detailed architectural materials and character models is a later art pass.
 
 ![SWISS-inspired airport portfolio visual concept](https://raw.githubusercontent.com/normanlinn/normanlinn.github.io/main/airport/design/swiss-terminal-concept.png)
 
@@ -122,3 +122,7 @@ The image below is **art direction**, while the playable prototype uses original
 ## Ownership
 
 Built and maintained by **[normanlinn — Zaw Lin Naing](https://github.com/normanlinn)**.
+
+## Aircraft asset credit
+
+The A350 base model is © 2026 **[amvlab](https://github.com/amvlab/aircraft-models)**, used under **[CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)**. This version normalizes its geometry, adapts the livery to the requested SWISS-inspired design, separates engine fan geometry, and adds retractable landing gear. The asset credit and original license ship with the site in `airport/assets/`.

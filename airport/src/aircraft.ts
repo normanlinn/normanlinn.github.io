@@ -1,32 +1,93 @@
 import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { DecalGeometry } from 'three/addons/geometries/DecalGeometry.js';
 
-/** A smooth procedural long-haul jet, with independently animated gear and fans. */
+/** Licensed A350 airframe, normalized once, with local livery and animated mechanisms. */
 export function buildAirliner(maxAnisotropy:number){
- const group=new THREE.Group();group.userData.animated=true;group.rotation.order='YXZ';
- const white=new THREE.MeshStandardMaterial({color:'#f9fafb',roughness:.24,metalness:.12});
- const red=new THREE.MeshStandardMaterial({color:'#d71920',roughness:.35,metalness:.12});
- const metal=new THREE.MeshStandardMaterial({color:'#a4adb4',roughness:.22,metalness:.9});
- const dark=new THREE.MeshStandardMaterial({color:'#18232c',roughness:.18,metalness:.45});
- const rubber=new THREE.MeshStandardMaterial({color:'#202126',roughness:.92});
- function mesh(geometry:THREE.BufferGeometry,material:THREE.Material,parent:THREE.Object3D=group){const m=new THREE.Mesh(geometry,material);m.castShadow=true;m.receiveShadow=true;parent.add(m);return m;}
- function block(w:number,h:number,d:number,material:THREE.Material,x:number,y:number,z:number,parent:THREE.Object3D=group){const m=mesh(new THREE.BoxGeometry(w,h,d),material,parent);m.position.set(x,y,z);return m;}
- const profile=[new THREE.Vector2(.04,-17),new THREE.Vector2(.25,-15.2),new THREE.Vector2(.64,-12.7),new THREE.Vector2(.94,-10.3),new THREE.Vector2(1.06,-7),new THREE.Vector2(1.06,7),new THREE.Vector2(1.02,9.5),new THREE.Vector2(.88,11.1),new THREE.Vector2(.64,12.2),new THREE.Vector2(.3,13.05),new THREE.Vector2(.015,13.5)];
- const body=mesh(new THREE.LatheGeometry(profile,64),white);body.rotation.x=Math.PI/2;
- const belly=mesh(new THREE.SphereGeometry(1,32,16),white);belly.scale.set(.9,.6,4.8);belly.position.set(0,-.66,-.3);
- function wing(side:number,tail=false){const shape=new THREE.Shape();const coords=tail?[[.3,.8],[5,-2.3],[5.4,-3.1],[.2,-2.5]]:[[.6,3.2],[5.2,1.3],[11.3,-2.1],[15.4,-5.4],[15.5,-6.2],[11,-4.2],[5,-2],[.6,-3.6]];coords.forEach(([x,z],i)=>{if(i)shape.lineTo(x,z);else shape.moveTo(x,z);});shape.closePath();const geometry=new THREE.ExtrudeGeometry(shape,{depth:tail?.08:.16,bevelEnabled:true,bevelSize:.025,bevelThickness:.025,bevelSegments:2});const p=geometry.getAttribute('position');for(let i=0;i<p.count;i++)p.setZ(i,p.getZ(i)-p.getX(i)*(tail?.03:.045));geometry.computeVertexNormals();const m=mesh(geometry,white);m.rotation.x=Math.PI/2;m.scale.x=side;m.position.set(0,tail?.35:-.32,tail?-12.8:0);if(!tail){const tip=block(.08,.75,.8,white,side*15.45,.65,-5.8);tip.rotation.z=side*-.18;}}
- for(const side of [-1,1]){wing(side);wing(side,true);}
- const finShape=new THREE.Shape();finShape.moveTo(0,0);finShape.lineTo(3.2,5.05);finShape.lineTo(5.1,5.05);finShape.lineTo(6,0);finShape.closePath();const fin=mesh(new THREE.ExtrudeGeometry(finShape,{depth:.18,bevelEnabled:true,bevelSize:.04,bevelThickness:.025,bevelSegments:2}),red);fin.rotation.y=Math.PI/2;fin.position.set(-.09,.3,-10.5);
- for(const side of [-1,1]){block(.03,.4,1.55,white,side*.14,3.65,-14.75);block(.03,1.55,.4,white,side*.14,3.65,-14.75);}
- // Transparent type decals keep the fuselage surface visible around the livery.
- const canvas=document.createElement('canvas');canvas.width=1536;canvas.height=384;const ctx=canvas.getContext('2d')!;ctx.fillStyle='#d71920';ctx.font='600 270px Arial';ctx.textBaseline='middle';ctx.fillText('SWISS',30,208);const texture=new THREE.CanvasTexture(canvas);texture.colorSpace=THREE.SRGBColorSpace;texture.anisotropy=maxAnisotropy;const logoMat=new THREE.MeshBasicMaterial({map:texture,transparent:true,depthWrite:false,side:THREE.DoubleSide,toneMapped:false});
- for(const side of [-1,1]){const logo=mesh(new THREE.PlaneGeometry(5.2,1.3),logoMat);logo.position.set(side*1.072,.13,5.6);logo.rotation.y=side*Math.PI/2;}
- const windowGeo=new THREE.SphereGeometry(.105,12,8);const windows=new THREE.InstancedMesh(windowGeo,dark,60);const matrix=new THREE.Matrix4(),q=new THREE.Quaternion(),scale=new THREE.Vector3(.16,1,1.35);let index=0;for(const side of [-1,1])for(let i=0;i<30;i++){matrix.compose(new THREE.Vector3(side*1.055,.4,-9.6+i*.59),q,scale);windows.setMatrixAt(index++,matrix);}group.add(windows);
- // Four individual cockpit panes follow the tapered nose.
- for(const side of [-1,1]){const geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.Float32BufferAttribute([side*.08,.53,12.55,side*.64,.42,11.65,side*.65,.77,11.4,side*.08,.85,12.05],3));geometry.setIndex(side===1?[0,1,2,0,2,3]:[0,2,1,0,3,2]);geometry.computeVertexNormals();const glass=mesh(geometry,new THREE.MeshStandardMaterial({color:'#162b3b',roughness:.08,metalness:.55,side:THREE.DoubleSide}));const sidePane=mesh(new THREE.PlaneGeometry(.64,.33),dark);sidePane.position.set(side*.83,.61,10.65);sidePane.rotation.y=side*Math.PI/2;sidePane.rotation.x=.05;}
- const fans:THREE.Group[]=[];
- for(const side of [-1,1]){const engine=new THREE.Group();engine.position.set(side*4.8,-1.08,.8);group.add(engine);block(.2,.8,1.3,white,side*4.8,-.66,.25);const nacelle=mesh(new THREE.CylinderGeometry(.76,.62,2.8,40,1,true),white,engine);nacelle.rotation.x=Math.PI/2;const rim=mesh(new THREE.TorusGeometry(.7,.075,12,48),metal,engine);rim.position.z=1.4;const inner=mesh(new THREE.CylinderGeometry(.66,.47,.8,32,1,true),dark,engine);inner.rotation.x=Math.PI/2;inner.position.z=1.05;const fan=new THREE.Group();fan.position.z=1.16;engine.add(fan);const disc=mesh(new THREE.CircleGeometry(.6,40),dark,fan);const blades=new THREE.InstancedMesh(new THREE.BoxGeometry(.055,.47,.025),metal,18);for(let i=0;i<18;i++){const angle=i*Math.PI*2/18;matrix.compose(new THREE.Vector3(Math.sin(angle)*.32,Math.cos(angle)*.32,.02),new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,0,1),-angle-.35),new THREE.Vector3(1,1,1));blades.setMatrixAt(i,matrix);}fan.add(blades);const spinner=mesh(new THREE.ConeGeometry(.14,.35,24),metal,fan);spinner.rotation.x=Math.PI/2;spinner.position.z=.12;fans.push(fan);const exhaust=mesh(new THREE.ConeGeometry(.4,.75,24),dark,engine);exhaust.rotation.x=-Math.PI/2;exhaust.position.z=-1.65;}
- const gear=new THREE.Group();group.add(gear);const wheels:THREE.Group[]=[];
- for(const [x,z,main]of [[-1.2,-2.4,1],[1.2,-2.4,1],[0,9,0]]){const strut=mesh(new THREE.CylinderGeometry(.065,.08,1.2,12),metal,gear);strut.position.set(x,-1.35,z);const brace=block(.06,.75,.07,metal,x+.15,-1.3,z,gear);brace.rotation.z=.4;for(const side of [-1,1])for(let axle=0;axle<(main?2:1);axle++){const wheelGroup=new THREE.Group();wheelGroup.position.set(x+side*.19,-1.98,z+axle*.48-.2);gear.add(wheelGroup);const tire=mesh(new THREE.CylinderGeometry(main?.3:.22,main?.3:.22,.18,24),rubber,wheelGroup);tire.rotation.z=Math.PI/2;const hub=mesh(new THREE.CylinderGeometry(.11,.11,.19,16),metal,wheelGroup);hub.rotation.z=Math.PI/2;wheels.push(wheelGroup);}}
- group.scale.setScalar(1.2);
- return {group,fans,gear,wheels};
+ const group=new THREE.Group();group.userData.animated=true;group.rotation.order='YXZ';group.visible=false;
+ const gear=new THREE.Group();group.add(gear);
+ const fans:THREE.Group[]=[],wheels:THREE.Group[]=[];
+ const state={loaded:false,source:'amvlab-a350',error:false};
+ const metal=new THREE.MeshStandardMaterial({color:'#b4bcc2',roughness:.23,metalness:.85});
+ const rubber=new THREE.MeshStandardMaterial({color:'#1d2024',roughness:.83});
+ function part(geometry:THREE.BufferGeometry,material:THREE.Material,parent:THREE.Object3D){const mesh=new THREE.Mesh(geometry,material);mesh.castShadow=true;mesh.receiveShadow=true;parent.add(mesh);return mesh;}
+ // Bogies sit at the runway surface with AIRCRAFT_GROUND_Y = 3.35.
+ for(const [x,z,main]of [[-1.7,-3.9,true],[1.7,-3.9,true],[0,12.5,false]] as const){
+  const leg=part(new THREE.CylinderGeometry(.055,.08,1.45,14),metal,gear);leg.position.set(x,-2.25,z);
+  const brace=part(new THREE.CylinderGeometry(.035,.035,1.2,10),metal,gear);brace.position.set(x,-2,z-.4);brace.rotation.x=-.5;
+  const bogie=part(new THREE.BoxGeometry(.36,.12,main?1.2:.3),metal,gear);bogie.position.set(x,-3.11,z);
+  for(const side of [-1,1])for(let axle=0;axle<(main?2:1);axle++){
+   const wheelGroup=new THREE.Group();wheelGroup.position.set(x+side*(main?.29:.18),main?-3.2:-3.31,z+(main?axle*.68-.34:0));gear.add(wheelGroup);
+   const radius=main?.36:.25;
+   const tire=part(new THREE.CylinderGeometry(radius,radius,main?.25:.17,28),rubber,wheelGroup);tire.rotation.z=Math.PI/2;
+   const hub=part(new THREE.CylinderGeometry(radius*.44,radius*.44,main?.26:.18,20),metal,wheelGroup);hub.rotation.z=Math.PI/2;wheels.push(wheelGroup);
+  }
+ }
+ const ready=new GLTFLoader().loadAsync('assets/a350-plain.glb').then(gltf=>{
+  gltf.scene.updateMatrixWorld(true);
+  let source:THREE.Mesh|undefined;
+  gltf.scene.traverse(object=>{if(object instanceof THREE.Mesh)source=object;});
+  if(!source)throw new Error('A350 mesh missing');
+  const geometry=source.geometry.clone();geometry.applyMatrix4(source.matrixWorld);
+  // The source airframe points along +X; the flight controller expects +Z.
+  geometry.rotateY(-Math.PI/2);geometry.computeBoundingBox();
+  const bounds=geometry.boundingBox!;
+  const sourceLength=bounds.max.z-bounds.min.z;
+  geometry.translate(-(bounds.min.x+bounds.max.x)/2,-1.1319137937413029,-(bounds.min.z+bounds.max.z)/2);
+  geometry.scale(38/sourceLength,38/sourceLength,38/sourceLength);
+  const expanded=geometry.index?geometry.toNonIndexed():geometry;
+  const positions=expanded.getAttribute('position'),normals=expanded.getAttribute('normal'),uv=expanded.getAttribute('uv');
+  const sourceMaterial=(Array.isArray(source.material)?source.material[0]:source.material) as THREE.MeshStandardMaterial;
+  const original=sourceMaterial.map!;
+  // Repaint the old blue livery islands while retaining the cockpit, doors, windows and engine details.
+  const image=original.image as ImageBitmap;
+  const atlas=document.createElement('canvas');atlas.width=image.width;atlas.height=image.height;
+  const ctx=atlas.getContext('2d')!;ctx.drawImage(image,0,0);
+  const pixels=ctx.getImageData(0,0,atlas.width,atlas.height);
+  for(let y=0;y<atlas.height;y++)for(let x=0;x<atlas.width;x++){
+   const i=(y*atlas.width+x)*4,r=pixels.data[i],g=pixels.data[i+1],b=pixels.data[i+2];
+   const nx=x/atlas.width,ny=y/atlas.height;
+   const windowRow=nx<.72&&((ny>.07&&ny<.12)||(ny>.25&&ny<.31)||(ny>.67&&ny<.73)||(ny>.85&&ny<.91));
+   const engineFan=nx>.81&&nx<.94&&ny<.145;
+   if(!windowRow&&!engineFan&&b-r>18&&b>g*1.08){pixels.data[i]=238;pixels.data[i+1]=241;pixels.data[i+2]=243;}
+  }
+  ctx.putImageData(pixels,0,0);
+  const map=new THREE.CanvasTexture(atlas);map.flipY=original.flipY;map.colorSpace=THREE.SRGBColorSpace;map.anisotropy=maxAnisotropy;
+  const paint=new THREE.MeshPhysicalMaterial({map,color:'#ffffff',roughness:.3,metalness:.08,clearcoat:.28,clearcoatRoughness:.23,side:THREE.DoubleSide});
+  const red=new THREE.MeshPhysicalMaterial({color:'#c81024',roughness:.28,metalness:.05,clearcoat:.3,clearcoatRoughness:.2,side:THREE.DoubleSide});
+  const buckets=Array.from({length:4},()=>({p:[] as number[],n:[] as number[],uv:[] as number[]}));
+  for(let i=0;i<positions.count;i+=3){
+   let x=0,y=0,z=0;let inFan=true;
+   for(let j=0;j<3;j++){x+=positions.getX(i+j)/3;y+=positions.getY(i+j)/3;z+=positions.getZ(i+j)/3;const u=uv.getX(i+j),v=uv.getY(i+j);if(u<.81||u>.94||v<0||v>.145)inFan=false;}
+   const fin=Math.abs(x)<.55&&y>1.65&&z< -10;
+   const fan=inFan&&Math.abs(x)>3.5&&Math.abs(x)<8&&z>5&&y<0;
+   const bucket=buckets[fin?1:fan?(x<0?2:3):0];
+   for(let j=0;j<3;j++){bucket.p.push(positions.getX(i+j),positions.getY(i+j),positions.getZ(i+j));bucket.n.push(normals.getX(i+j),normals.getY(i+j),normals.getZ(i+j));bucket.uv.push(uv.getX(i+j),uv.getY(i+j));}
+  }
+  if(buckets.some(bucket=>bucket.p.length===0))throw new Error('Incomplete airframe or fan geometry');
+  const model=new THREE.Group();
+  const meshes=buckets.map((bucket,index)=>{
+   const geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.Float32BufferAttribute(bucket.p,3));geo.setAttribute('normal',new THREE.Float32BufferAttribute(bucket.n,3));geo.setAttribute('uv',new THREE.Float32BufferAttribute(bucket.uv,2));
+   if(index>1){geo.computeBoundingBox();const center=geo.boundingBox!.getCenter(new THREE.Vector3());geo.translate(-center.x,-center.y,-center.z);const rotor=new THREE.Group();rotor.position.copy(center);model.add(rotor);part(geo,paint,rotor);fans.push(rotor);return null;}
+   return part(geo,index===1?red:paint,model);
+  });
+  model.updateMatrixWorld(true);
+  function decal(target:THREE.Mesh,texture:THREE.Texture,position:THREE.Vector3,side:number,size:THREE.Vector3){
+   const material=new THREE.MeshStandardMaterial({map:texture,transparent:true,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-4,roughness:.32,metalness:.02});
+   const projected=new DecalGeometry(target,position,new THREE.Euler(0,side*Math.PI/2,0),size);
+   const mesh=new THREE.Mesh(projected,material);mesh.renderOrder=2;model.add(mesh);
+  }
+  const lettering=document.createElement('canvas');lettering.width=1536;lettering.height=384;
+  const letteringContext=lettering.getContext('2d')!;letteringContext.fillStyle='#c81024';letteringContext.font='600 260px Arial';letteringContext.textBaseline='middle';letteringContext.fillText('SWISS',25,202);
+  const letteringMap=new THREE.CanvasTexture(lettering);letteringMap.colorSpace=THREE.SRGBColorSpace;letteringMap.anisotropy=maxAnisotropy;
+  const flag=document.createElement('canvas');flag.width=flag.height=512;const flagContext=flag.getContext('2d')!;flagContext.fillStyle='#fff';flagContext.fillRect(110,215,292,82);flagContext.fillRect(215,110,82,292);
+  const flagMap=new THREE.CanvasTexture(flag);flagMap.colorSpace=THREE.SRGBColorSpace;flagMap.anisotropy=maxAnisotropy;
+  for(const side of [-1,1]){
+   decal(meshes[0]!,letteringMap,new THREE.Vector3(side*1.75,.18,10.1),side,new THREE.Vector3(6.9,1.7,1.4));
+   decal(meshes[1]!,flagMap,new THREE.Vector3(side*.15,4.6,-16.35),side,new THREE.Vector3(3.2,3.2,.55));
+  }
+  group.add(model);group.visible=true;state.loaded=true;
+  geometry.dispose();if(expanded!==geometry)expanded.dispose();
+ }).catch(error=>{state.error=true;console.warn('Aircraft model could not load.',error);});
+ return {group,fans,gear,wheels,state,ready};
 }

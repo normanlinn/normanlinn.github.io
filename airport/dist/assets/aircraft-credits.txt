@@ -1,0 +1,16 @@
+A350 aircraft model
+Copyright (c) 2026 amvlab
+Source: https://github.com/amvlab/aircraft-models
+Asset: models/A350_nologo.glb
+License: Creative Commons Attribution 4.0 International (CC BY 4.0)
+https://creativecommons.org/licenses/by/4.0/
+
+Changes for ZLN Terminal by Zaw Lin Naing:
+- Coordinate normalization and web-scene scale.
+- SWISS-inspired red-and-white livery and projected lettering/crosses.
+- Animated fan groups and additional retractable landing gear.
+- Integration with the portfolio landing and takeoff sequences.
+
+The model creator does not endorse this adaptation.
+The SWISS name and livery identify the requested aircraft inspiration.
+Full base-asset license: aircraft-license.txt

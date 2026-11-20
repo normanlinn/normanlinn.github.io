@@ -1,5 +1,5 @@
 export type FlightKind='landing'|'takeoff';
-export const AIRCRAFT_GROUND_Y=2.55;
+export const AIRCRAFT_GROUND_Y=3.35;
 export const FLIGHT_DURATION={landing:24,takeoff:21};
 export function flightPose(kind:FlightKind,seconds:number){
  const t=Math.min(1,Math.max(0,seconds/FLIGHT_DURATION[kind]));
