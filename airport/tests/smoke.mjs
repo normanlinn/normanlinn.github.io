@@ -16,6 +16,7 @@ try{
  assert.equal(await page.evaluate(()=>window.terminalState.mode),'scroll');
  assert.equal(await page.evaluate(()=>window.terminalState.airport),'zurich-dock-e');
  assert.equal(await page.evaluate(()=>window.terminalState.fleet.b777),true);
+ await page.waitForTimeout(400);const idleFrame=await page.evaluate(()=>window.terminalState.renderedFrames);await page.waitForTimeout(200);assert.ok(await page.evaluate(()=>window.terminalState.renderedFrames)<=idleFrame+1,'Paused terminal keeps redrawing');
  assert.ok(await page.locator('.brand-mark').evaluate(image=>image.complete&&image.naturalWidth>0));
  assert.equal(await page.locator('#joystick,#mouse-look,.crosshair').count(),0);
  const before=await page.evaluate(()=>window.terminalState.position);
@@ -33,7 +34,7 @@ try{
   await page.locator('#directory-open').click();await page.locator('#directory [data-directory="'+id+'"]').click();
   assert.ok(await page.locator('#detail a[href="'+url+'"]').count());await page.locator('#detail .dialog-close').click();
  }
- await page.locator('#lounge [data-directory="lounge"]').click();await page.locator('#copy-email').click();await page.waitForFunction(()=>document.querySelector('#copy-email').textContent==='Copied!');await page.locator('#detail .dialog-close').click();
+ await page.locator('#lounge [data-directory="lounge"]').click();assert.equal(await page.locator('.travel-pass').getAttribute('data-format'),'paper');await page.locator('[data-pass-format="mobile"]').click();assert.equal(await page.locator('.travel-pass').getAttribute('data-format'),'mobile');await page.locator('[data-qr="resume"]').click();assert.equal(await page.locator('.qr-link').getAttribute('href'),'https://normanlinn.github.io/assets/zaw-lin-naing-resume.pdf');await page.locator('.pass-qr').evaluate(img=>img.decode());assert.ok(await page.locator('.pass-qr').evaluate(img=>img.complete&&img.naturalWidth>0));await page.locator('#copy-email').click();await page.waitForFunction(()=>document.querySelector('#copy-email').textContent==='Copied!');await page.locator('#detail .dialog-close').click();
  await page.locator('#watch-runway').click();
  await page.waitForFunction(()=>window.terminalState.chapter==='runway');
  await page.waitForFunction(()=>window.terminalState.cameraMode==='explore');

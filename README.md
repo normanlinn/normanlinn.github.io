@@ -24,7 +24,7 @@ The published portfolio is a scroll-guided **Three.js + TypeScript** airport exp
 
 The terminal now draws on Zürich Dock E: exposed concrete soffits, a central skylight, terrazzo, bilingual yellow wayfinding, apron jet bridges, and a control tower. Four layers of textured Swiss ridges, snowfields and evergreen foothills sit beyond the airport.
 
-The runway fleet includes the licensed A350 and an original procedural **777-300ER interpretation**, with a longer fuselage, raked wingtips, large twin engines and fourteen wheels. Select either aircraft for landing and takeoff. The A350 has replacement tapered tailplanes. Both include animated fans and retracting gear; moving luggage, opening doors, floor reflections and the pause control remain part of the scroll journey.
+The runway fleet includes the licensed A350 and an original procedural **777-300ER interpretation**, with a longer fuselage, raked wingtips, large twin engines and fourteen wheels. Select either aircraft for landing and takeoff. The A350 has replacement tapered tailplanes. Both include animated fans and retracting gear; moving luggage, opening doors, environment-lit terrazzo and the pause control remain part of the scroll journey.
 
 ### Controls
 
@@ -138,3 +138,9 @@ The airport is an original portfolio layout inspired by [Dock E’s concrete, me
 ### Interface and aircraft refinements
 
 The active section card stays between the fixed header and footer, with internal scrolling for long content. Navigation uses a moving Swiss-red marker and outline icons, while the favicon, wing monogram and social preview share the ZLN identity. Card fades, an animated code editor, restrained avatar motion and damped gear movement respect the ambient pause and reduced-motion controls. The 777 fuselage now uses shaped elliptical sections, skin-mounted windows and projected cockpit/door details.
+
+### Boarding passes and rendering performance
+
+The First Class contact panel offers paper and mobile layouts, each with selectable QR codes for GitHub and the résumé PDF. The QR assets are generated locally and verified by decoding both source PNGs and rendered browser images. They make no external QR-service requests.
+
+The scene uses one main rendering pass, cached static shadows, limited shadow updates during flights, and on-demand drawing when the scene is paused. The code-editor texture updates only near the developer desk. Button feedback uses short transform/opacity animations with reduced-motion support. The 777 now has a monotone-smoothed radome, a swept thin fin, and airfoil-shaped horizontal stabilizers with trailing-edge elevator seams.
