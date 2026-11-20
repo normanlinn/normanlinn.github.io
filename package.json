@@ -1,28 +1,18 @@
 {
   "name": "portfolio",
   "version": "1.0.0",
-  "description": "Zaw Lin Naing\u2019s walkable 3D airport portfolio, built with Three.js and TypeScript.",
+  "description": "Zaw Lin Naing’s 3D airport portfolio (Three.js + TypeScript). The app lives in airport/.",
   "scripts": {
     "typecheck": "npm --prefix airport run typecheck",
     "build": "npm --prefix airport run build && node scripts/publish-airport.mjs",
     "test": "npm --prefix airport test",
     "airport:build": "npm --prefix airport run build",
-    "airport:dev": "npm --prefix airport run dev"
+    "airport:dev": "npm --prefix airport run dev",
+    "format": "npm --prefix airport run format"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
-  "private": true,
-  "devDependencies": {
-    "@types/react": "^19.3.0",
-    "esbuild": "^0.28.2",
-    "typescript": "^7.0.2"
-  },
-  "dependencies": {
-    "framer-motion": "^14.0.0",
-    "lenis": "^1.3.27",
-    "react": "^19.3.0",
-    "react-dom": "^19.3.0"
-  }
+  "private": true
 }

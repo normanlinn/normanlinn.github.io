@@ -90,11 +90,16 @@ The build preserves the Google Search Console verification file, sitemap, résum
 | `airport/src/main.ts` | Scene geometry, lighting, scroll-linked camera route, project interactions, and panels |
 | `airport/index.html` | Arrival UI, navigation, directory, and accessible fallback links |
 | `airport/site.css` | Responsive typography, rounded interface, panels, and transitions |
-| `airport/build.mjs` | Type checking/bundling output and local asset preparation |
+| `airport/build.mjs` | Bundles `src/` and copies `index.html`, `site.css`, `assets/` and `public/` into `airport/dist/` |
+| `airport/assets/` | Fonts, project screenshots, portrait, résumé, aircraft model and QR codes |
+| `airport/public/` | Files served from the site root: `llms.txt`, `sitemap.xml`, Search Console verification |
 | `airport/design/` | Visual concept and prototype screenshots |
-| `dist/`, `docs/` | Production airport site, search metadata, verification file, and static assets |
+| `dist/`, `docs/` | Generated production site (rebuilt from scratch by `npm run build`; do not edit by hand) |
 | `scripts/publish-airport.mjs` | Prepare the production GitHub Pages folder |
-| `src/` | Earlier editorial implementation, retained for reference |
+
+The earlier editorial version of the site lives on the [`archive/pre-airport-3d-20261119`](https://github.com/normanlinn/normanlinn.github.io/tree/archive/pre-airport-3d-20261119) branch.
+
+Run `npm --prefix airport run format` to format the source with Prettier before committing.
 
 ## Real projects
 
