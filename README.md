@@ -17,12 +17,14 @@ The published portfolio is a scroll-guided **Three.js + TypeScript** airport exp
 ## Explore the terminal
 
 - **Arrivals:** enter a 3D terminal with a red floor route and an aircraft beyond the windows.
-- **Gates A1–A4:** open real developer projects from the gate screens or departures board.
+- **Gates E42–E45:** open real developer projects from the gate screens or departures board.
 - **Developer desk:** explore my tools and technologies.
 - **Developer pass:** read about my path from aviation customer service at LAX to building software.
 - **First Class Lounge:** open a boarding-pass contact panel, copy my email, or view my résumé.
 
-There are moving luggage cases, opening security doors, textured stone and wood finishes, soft environmental lighting, desktop floor reflections, a licensed A350 airframe with SWISS-inspired livery, animated engine fans, and retracting gear, landing and takeoff sequences viewed through the terminal glass, smooth camera journeys, a pause-ambience control, and a directory for opening every project directly.
+The terminal now draws on Zürich Dock E: exposed concrete soffits, a central skylight, terrazzo, bilingual yellow wayfinding, apron jet bridges, and a control tower. Four layers of textured Swiss ridges, snowfields and evergreen foothills sit beyond the airport.
+
+The runway fleet includes the licensed A350 and an original procedural **777-300ER interpretation**, with a longer fuselage, raked wingtips, large twin engines and fourteen wheels. Select either aircraft for landing and takeoff. The A350 has replacement tapered tailplanes. Both include animated fans and retracting gear; moving luggage, opening doors, floor reflections and the pause control remain part of the scroll journey.
 
 ### Controls
 
@@ -33,7 +35,8 @@ There are moving luggage cases, opening security doors, textured stone and wood 
 | Open a project | Project gate buttons, directory, or a visible 3D screen | Tap the same buttons or screens |
 | Open contact details | First Class Lounge boarding-pass button | Tap the boarding-pass button |
 | Close a panel | Escape or close button | Close button |
-| See aircraft sequences | Watch runway, then Landing or Takeoff | Same controls |
+| Choose an aircraft | Watch runway, then A350 or 777-300ER | Same controls |
+| See aircraft sequences | Landing or Takeoff | Same controls |
 
 The page is **scroll-only**: there are no walking keys, joystick, drag-to-look, or pointer-lock controls. The camera follows a curated route between Arrivals, Projects, My Story, Developer Desk, First Class Lounge, and Runway Observation.
 
@@ -126,3 +129,7 @@ Built and maintained by **[normanlinn — Zaw Lin Naing](https://github.com/norm
 ## Aircraft asset credit
 
 The A350 base model is © 2026 **[amvlab](https://github.com/amvlab/aircraft-models)**, used under **[CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)**. This version normalizes its geometry, adapts the livery to the requested SWISS-inspired design, separates engine fan geometry, and adds retractable landing gear. The asset credit and original license ship with the site in `airport/assets/`.
+
+### Zürich-inspired terminal update
+
+The airport is an original portfolio layout inspired by [Dock E’s concrete, metal, terrazzo and glass](https://www.flughafen-zuerich.ch/en/company/flughafen-zuerich/airport-development/old-conctruction-projects/dock-e), rather than a measured reconstruction. All landscape and surface textures are generated locally; no texture-service requests are required. The 777 geometry is original and separate from the licensed A350 base asset.

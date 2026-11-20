@@ -1,6 +1,8 @@
 import * as THREE from 'three';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { buildAirliner } from './aircraft';
+import { buildBoeing } from './boeing';
+import { buildZurich } from './zurich';
 import { terminalMaterials } from './materials';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
 import { Reflector } from 'three/addons/objects/Reflector.js';
@@ -11,20 +13,20 @@ function initTerminal(){
 type StationId = 'lax'|'yay'|'tea'|'calc'|'about'|'skills'|'lounge';
 type Project = {gate:string;name:string;kind:string;description:string;image:string;url:string;source?:string};
 const projects:Record<string,Project>={
- lax:{gate:'A1',name:'LAXCommute',kind:'TypeScript / Web app',description:'Employee shuttle information for LAX, built from an everyday problem I knew firsthand.',image:'work-lax-desktop.jpg',url:'https://employeeshuttlelax.com/',source:'https://github.com/normanlinn/LAXCommute'},
- yay:{gate:'A2',name:'Yay Kyaw Nights',kind:'TypeScript / 3D experience',description:'A browser-based night fair inspired by Yangon. Explore the world, its rides, and its atmosphere.',image:'work-yaykyaw-desktop.jpg',url:'https://yaykyawfair.vercel.app/',source:'https://github.com/normanlinn/yaykyawfair'},
- tea:{gate:'A3',name:'Burman Tea',kind:'TypeScript / Shop website',description:'A website for a Burmese tea shop in Los Angeles, bringing familiar flavors to the web.',image:'work-tea-desktop.jpg',url:'https://burmantea.vercel.app/'},
- calc:{gate:'A4',name:'Derivatives Field Guide',kind:'TypeScript / Learning tool',description:'An interactive calculus study guide with worked examples, graphs, and practice questions.',image:'work-calc-desktop.jpg',url:'https://normanlinn.github.io/calculus-study-site/',source:'https://github.com/normanlinn/calculus-study-site'}
+ lax:{gate:'E42',name:'LAXCommute',kind:'TypeScript / Web app',description:'Employee shuttle information for LAX, built from an everyday problem I knew firsthand.',image:'work-lax-desktop.jpg',url:'https://employeeshuttlelax.com/',source:'https://github.com/normanlinn/LAXCommute'},
+ yay:{gate:'E43',name:'Yay Kyaw Nights',kind:'TypeScript / 3D experience',description:'A browser-based night fair inspired by Yangon. Explore the world, its rides, and its atmosphere.',image:'work-yaykyaw-desktop.jpg',url:'https://yaykyawfair.vercel.app/',source:'https://github.com/normanlinn/yaykyawfair'},
+ tea:{gate:'E44',name:'Burman Tea',kind:'TypeScript / Shop website',description:'A website for a Burmese tea shop in Los Angeles, bringing familiar flavors to the web.',image:'work-tea-desktop.jpg',url:'https://burmantea.vercel.app/'},
+ calc:{gate:'E45',name:'Derivatives Field Guide',kind:'TypeScript / Learning tool',description:'An interactive calculus study guide with worked examples, graphs, and practice questions.',image:'work-calc-desktop.jpg',url:'https://normanlinn.github.io/calculus-study-site/',source:'https://github.com/normanlinn/calculus-study-site'}
 };
 const $=<T extends HTMLElement>(selector:string)=>document.querySelector<T>(selector)!;
 const canvas=$<HTMLCanvasElement>('#terminal'),arrival=$('#arrival'),detail=$<HTMLDialogElement>('#detail'),directory=$<HTMLDialogElement>('#directory');
 const reduced=matchMedia('(prefers-reduced-motion: reduce)'),coarse=matchMedia('(pointer:coarse)');
 let ambience=!reduced.matches,initialized=false;
 
-const scene=new THREE.Scene();scene.background=new THREE.Color('#dfe8ed');scene.fog=new THREE.Fog('#dfe7e9',85,210);
-const camera=new THREE.PerspectiveCamera(55,innerWidth/innerHeight,.1,250);camera.position.set(5,3.1,22);camera.lookAt(0,2.7,-20);camera.rotation.order='YXZ';
+const scene=new THREE.Scene();scene.background=new THREE.Color('#dfe8ed');scene.fog=new THREE.Fog('#dfe7e9',120,350);
+const camera=new THREE.PerspectiveCamera(55,innerWidth/innerHeight,.1,420);camera.position.set(5,3.1,22);camera.lookAt(0,2.7,-20);camera.rotation.order='YXZ';
 let renderer:THREE.WebGLRenderer;
-try{renderer=new THREE.WebGLRenderer({canvas,antialias:true,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(devicePixelRatio,coarse.matches?1.4:1.75));renderer.setSize(innerWidth,innerHeight);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.04;renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFShadowMap;}catch{$('#webgl-fallback').hidden=false;$('#scene-state').textContent='SCROLL TO EXPLORE';$('#watch-runway').addEventListener('click',()=>document.querySelector('#runway')?.scrollIntoView());$('#reset-view').addEventListener('click',()=>document.querySelector('#arrival')?.scrollIntoView());$('#motion-toggle').hidden=true;$('#fallback-close').addEventListener('click',()=>{$('#webgl-fallback').hidden=true;});document.querySelectorAll<HTMLButtonElement>('[data-travel]').forEach(button=>button.addEventListener('click',()=>document.querySelector<HTMLElement>('[data-stop="'+button.dataset.travel+'"]')?.scrollIntoView()));$('#enter').addEventListener('click',()=>document.querySelector('#projects')?.scrollIntoView());$('#view-projects').addEventListener('click',openDirectory);$('#directory-open').addEventListener('click',openDirectory);$('#fallback-directory').addEventListener('click',openDirectory);document.querySelectorAll<HTMLButtonElement>('[data-directory]').forEach(b=>b.addEventListener('click',()=>openStation(b.dataset.directory as StationId)));document.querySelectorAll<HTMLButtonElement>('.dialog-close').forEach(b=>b.addEventListener('click',()=>b.closest('dialog')?.close()));return;}
+try{renderer=new THREE.WebGLRenderer({canvas,antialias:true,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(devicePixelRatio,coarse.matches?1.4:1.75));renderer.setSize(innerWidth,innerHeight);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=.95;renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFShadowMap;}catch{$('#webgl-fallback').hidden=false;$('#scene-state').textContent='SCROLL TO EXPLORE';$('#watch-runway').addEventListener('click',()=>document.querySelector('#runway')?.scrollIntoView());$('#reset-view').addEventListener('click',()=>document.querySelector('#arrival')?.scrollIntoView());$('#motion-toggle').hidden=true;$('#fallback-close').addEventListener('click',()=>{$('#webgl-fallback').hidden=true;});document.querySelectorAll<HTMLButtonElement>('[data-travel]').forEach(button=>button.addEventListener('click',()=>document.querySelector<HTMLElement>('[data-stop="'+button.dataset.travel+'"]')?.scrollIntoView()));$('#enter').addEventListener('click',()=>document.querySelector('#projects')?.scrollIntoView());$('#view-projects').addEventListener('click',openDirectory);$('#directory-open').addEventListener('click',openDirectory);$('#fallback-directory').addEventListener('click',openDirectory);document.querySelectorAll<HTMLButtonElement>('[data-directory]').forEach(b=>b.addEventListener('click',()=>openStation(b.dataset.directory as StationId)));document.querySelectorAll<HTMLButtonElement>('.dialog-close').forEach(b=>b.addEventListener('click',()=>b.closest('dialog')?.close()));return;}
 const finish=terminalMaterials(renderer,scene);
 const mats={
  floor:finish.floor,white:finish.white,ink:finish.leather,steel:finish.steel,red:new THREE.MeshStandardMaterial({color:'#cf0d1b',roughness:.45}),wood:finish.wood,glass:new THREE.MeshPhysicalMaterial({color:'#cbdde1',metalness:.3,roughness:.09,transparent:true,opacity:.09,depthWrite:false}),green:new THREE.MeshStandardMaterial({color:'#526b4f',roughness:.9}),rubber:new THREE.MeshStandardMaterial({color:'#343a40',roughness:.85}),light:new THREE.MeshStandardMaterial({color:'#fff9e9',emissive:'#fff1d7',emissiveIntensity:1.2})
@@ -42,44 +44,41 @@ const hemi=new THREE.HemisphereLight('#f2f7ff','#b6b2a5',1.35);scene.add(hemi);
 const sun=new THREE.DirectionalLight('#fff5e7',3.1);sun.position.set(16,26,-36);sun.castShadow=true;sun.shadow.mapSize.set(coarse.matches?1024:2048,coarse.matches?1024:2048);Object.assign(sun.shadow.camera,{left:-36,right:36,top:35,bottom:-35,near:1,far:100});sun.shadow.bias=-.0004;sun.shadow.normalBias=.04;scene.add(sun);
 const fill=new THREE.DirectionalLight('#e2edff',.8);fill.position.set(-15,15,18);scene.add(fill);
 
-// Terminal shell: an open central aisle, structural ribs, glass and an apron.
-box(48,.25,60,mats.floor,0,-.14,-4);
-box(150,.2,100,new THREE.MeshStandardMaterial({color:'#bfc8cc',roughness:.92}),0,-.35,-78);
-// A low-opacity planar reflection adds depth on larger screens; phones use the PBR finish alone.
+// Zürich Dock E-inspired architecture and a layered Swiss landscape.
+const zurich=buildZurich(scene,mats,coarse.matches);
 if(!coarse.matches&&innerWidth>=1000){
- const reflection=new Reflector(new THREE.PlaneGeometry(48,60),{color:0xd6d9d5,textureWidth:768,textureHeight:768,clipBias:.003,multisample:0});
- reflection.rotation.x=-Math.PI/2;reflection.position.set(0,.006,-4);const reflectedMaterial=reflection.material as THREE.ShaderMaterial;reflectedMaterial.fragmentShader=reflectedMaterial.fragmentShader.replace('blendOverlay( base.rgb, color ), 1.0','blendOverlay( base.rgb, color ), 0.13');reflectedMaterial.transparent=true;reflectedMaterial.depthWrite=false;reflection.userData.animated=true;scene.add(reflection);
+ const reflection=new Reflector(new THREE.PlaneGeometry(48,60),{color:0xc6cbd0,textureWidth:768,textureHeight:768,clipBias:.003,multisample:0});reflection.rotation.x=-Math.PI/2;reflection.position.set(0,.006,-4);const mat=reflection.material as THREE.ShaderMaterial;mat.fragmentShader=mat.fragmentShader.replace('blendOverlay( base.rgb, color ), 1.0','blendOverlay( base.rgb, color ), 0.1');mat.transparent=true;mat.depthWrite=false;reflection.userData.animated=true;scene.add(reflection);
 }
-
-box(.4,10,60,mats.white,-24,5,-4);box(.4,10,60,mats.white,24,5,-4);
-box(48,8,.08,mats.glass,0,4.2,-31);
-for(let x=-24;x<=24;x+=6){box(.22,9,.25,mats.steel,x,4.5,-31);beam(new THREE.Vector3(x,8,-31),new THREE.Vector3(x,11,-13),.1);beam(new THREE.Vector3(x,11,-13),new THREE.Vector3(x,9,18),.1);}
-for(let z=-30;z<=20;z+=8){beam(new THREE.Vector3(-24,9,z),new THREE.Vector3(24,9,z),.14);box(44,.12,.1,mats.light,0,8.84,z+.3);}
-for(let x=-22;x<22;x+=.5)box(.16,.18,17,mats.wood,x,9.15,10);
-for(let x=-23;x<=23;x+=8){box(.25,8,.25,mats.steel,x,4,-3);box(.2,8,.2,mats.steel,x,4,19);}
 // Red wayfinding line physically belongs to the floor.
 const routeCurve=new THREE.CatmullRomCurve3([new THREE.Vector3(3,.02,23),new THREE.Vector3(0,.02,13),new THREE.Vector3(0,.02,4),new THREE.Vector3(0,.02,-6),new THREE.Vector3(-3,.02,-13)]);
 const floorRoute=new THREE.Mesh(new THREE.TubeGeometry(routeCurve,90,.085,5,false),mats.red);scene.add(floorRoute);
 const routePulse=new THREE.Mesh(new THREE.SphereGeometry(.15,12,8),new THREE.MeshBasicMaterial({color:'#ef4b50'}));routePulse.userData.animated=true;scene.add(routePulse);
 // The jet stays entirely outside the terminal glass, above the apron/runway.
-const airliner=buildAirliner(renderer.capabilities.getMaxAnisotropy());
+const fleet={a350:buildAirliner(renderer.capabilities.getMaxAnisotropy()),b777:buildBoeing(renderer.capabilities.getMaxAnisotropy())};
+let selectedAircraft:'a350'|'b777'='a350';let airliner=fleet.a350;
+for(const model of Object.values(fleet)){model.group.position.set(-42,AIRCRAFT_GROUND_Y,-96);model.group.rotation.y=Math.PI/2;scene.add(model.group);}
 for(const id of ['#watch-landing','#watch-takeoff','#runway-park'])$<HTMLButtonElement>(id).disabled=true;
 airliner.ready.then(()=>{for(const id of ['#watch-landing','#watch-takeoff','#runway-park'])$<HTMLButtonElement>(id).disabled=!airliner.state.loaded;if(airliner.state.error)$('#runway-status').textContent='AIRCRAFT UNAVAILABLE';});
-const plane=airliner.group;plane.position.set(4,AIRCRAFT_GROUND_Y,-62);plane.rotation.y=Math.PI/2;scene.add(plane);
+let plane=airliner.group;plane.position.set(4,AIRCRAFT_GROUND_Y,-62);plane.rotation.y=Math.PI/2;scene.add(plane);
 const runwayMaterial=new THREE.MeshStandardMaterial({color:'#78858b',roughness:.9});box(260,.02,8,runwayMaterial,0,-.23,-67);
 for(let x=-125;x<125;x+=9)box(4,.025,.16,mats.white,x,-.21,-67);
 for(let x=-125;x<125;x+=5){box(.2,.03,.2,mats.light,x,-.2,-71.1);box(.2,.03,.2,mats.light,x,-.2,-62.9);}
 let flight:{kind:FlightKind;time:number;manual:boolean}|null=null;
+function parkPlane(){flight=null;plane.visible=true;plane.position.set(4,AIRCRAFT_GROUND_Y,-62);plane.rotation.set(0,Math.PI/2,0);airliner.gear.position.y=0;airliner.gear.visible=true;$('#runway-status').textContent='ON STAND';}
+document.querySelectorAll<HTMLButtonElement>('[data-aircraft]').forEach(button=>button.addEventListener('click',()=>{
+ const next=button.dataset.aircraft as 'a350'|'b777';if(!fleet[next].state.loaded)return;
+ plane.position.set(-42,AIRCRAFT_GROUND_Y,-96);plane.rotation.set(0,Math.PI/2,0);plane.visible=true;airliner.gear.position.y=0;airliner.gear.visible=true;
+ selectedAircraft=next;airliner=fleet[next];plane=airliner.group;parkPlane();setClearWindowView(true);
+ document.querySelectorAll<HTMLButtonElement>('[data-aircraft]').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));
+ $('#aircraft-name').textContent=next==='a350'?'AIRBUS A350':'BOEING 777-300ER';
+}));
 function playFlight(kind:FlightKind,manual=true){setClearWindowView(true);flight={kind,time:0,manual};plane.visible=true;ambience=true;syncAmbience();$('#runway-status').textContent=kind==='landing'?'INBOUND / APPROACH':'OUTBOUND / TAKEOFF';}
 function setClearWindowView(clear:boolean){document.body.classList.toggle('clear-window-view',clear);const panel=document.querySelector<HTMLElement>('#runway .station-card')!;panel.inert=clear;panel.setAttribute('aria-hidden',String(clear));$('#runway-view').textContent=clear?'Show story panel':'Clear window view';$('#runway-view').setAttribute('aria-pressed',String(clear));}
 $('#runway-view').addEventListener('click',()=>setClearWindowView(!document.body.classList.contains('clear-window-view')));
 $('#watch-runway').addEventListener('click',()=>travel('runway'));
 $('#watch-landing').addEventListener('click',()=>playFlight('landing'));
 $('#watch-takeoff').addEventListener('click',()=>playFlight('takeoff'));
-$('#runway-park').addEventListener('click',()=>{flight=null;plane.visible=true;plane.position.set(4,AIRCRAFT_GROUND_Y,-62);plane.rotation.set(0,Math.PI/2,0);airliner.gear.position.y=0;airliner.gear.visible=true;$('#runway-status').textContent='ON STAND';});
-// Silhouettes beyond the apron suggest an alpine horizon.
-for(let i=0;i<14;i++){const mountain=new THREE.Mesh(new THREE.ConeGeometry(10+i%4,8+i%5,4),new THREE.MeshStandardMaterial({color:i%2?'#a2b8c2':'#b4c7ce',roughness:1}));mountain.position.set(-95+i*15,1,-113-(i%3)*8);mountain.rotation.y=.6+i*.8;scene.add(mountain);}
-
+$('#runway-park').addEventListener('click',parkPlane);
 // Seating, plants, and a moving baggage carousel.
 function chair(x:number,z:number,rotation=0){const g=new THREE.Group();g.position.set(x,0,z);g.rotation.y=rotation;roundBox(1.3,.16,1.05,mats.ink,0,.65,0,g);const back=roundBox(1.3,1.05,.18,mats.ink,0,1.2,-.45,g);back.rotation.x=-.08;for(const side of [-.48,.48]){box(.07,.65,.07,mats.steel,side,.32,0,g);box(.08,.07,.85,mats.steel,side,.94,.05,g);}scene.add(g);}
 for(const z of [-25,-28])for(const x of [-19,-17.5,-16,-10,-8.5,-7,7,8.5,10,16,17.5,19])chair(x,z);
@@ -90,12 +89,12 @@ const carousel=new THREE.Mesh(new THREE.ExtrudeGeometry(carouselShape,{depth:.65
 const bags:THREE.Group[]=[];for(let i=0;i<7;i++){const bag=new THREE.Group();bag.userData.animated=true;roundBox(.7,.85,.45,i%3===0?mats.red:i%3===1?mats.ink:mats.wood,0,.45,0,bag,.08);box(.3,.05,.05,mats.ink,0,.95,0,bag);for(const x of [-.24,.24])cylinder(.07,.08,mats.ink,x,.04,0,bag);scene.add(bag);bags.push(bag);}
 sign('BAGGAGE / IDEAS IN TRANSIT',-12,4,11,7,.8);
 // Security doors move when the visitor approaches; the aisle remains clear.
-const security=new THREE.Group();security.position.set(0,0,9);scene.add(security);for(const x of [-2.2,2.2])box(.4,3.2,.8,mats.white,x,1.6,0,security);box(4.8,.45,.8,mats.white,0,3.2,0,security);const doors=[box(1.95,1.7,.05,mats.glass,-1.05,.9,0,security),box(1.95,1.7,.05,mats.glass,1.05,.9,0,security)];doors.forEach(door=>door.userData.animated=true);sign('WELCOME / YOUR NEXT CHAPTER',0,4.4,9,6,.85);
+const security=new THREE.Group();security.position.set(0,0,9);scene.add(security);for(const x of [-2.2,2.2])box(.4,3.2,.8,mats.white,x,1.6,0,security);box(4.8,.45,.8,mats.white,0,3.2,0,security);const doors=[box(1.95,1.7,.05,mats.glass,-1.05,.9,0,security),box(1.95,1.7,.05,mats.glass,1.05,.9,0,security)];doors.forEach(door=>door.userData.animated=true);sign('Boarding / Your next chapter',0,3.8,9,4.5,.55);
 
 const interactive:THREE.Object3D[]=[];const targets=new Map<StationId,THREE.Vector3>();
 function target(id:StationId,obj:THREE.Object3D,pos:THREE.Vector3){obj.traverse(child=>{child.userData.station=id;});interactive.push(obj);targets.set(id,pos);}
 const textureLoader=new THREE.TextureLoader();
-function kiosk(id:string,x:number){const p=projects[id];const group=new THREE.Group();group.position.set(x,0,-18);scene.add(group);box(3,.25,1.5,mats.steel,0,.12,0,group);box(.6,1.3,.5,mats.steel,0,.85,0,group);roundBox(3.8,2.6,.22,mats.ink,0,2.5,0,group,.08);const screen=new THREE.Mesh(new THREE.PlaneGeometry(3.5,2.18),new THREE.MeshBasicMaterial({color:'#f0f2f4'}));screen.position.set(0,2.55,.12);group.add(screen);textureLoader.load('assets/'+p.image,texture=>{texture.colorSpace=THREE.SRGBColorSpace;texture.anisotropy=renderer.capabilities.getMaxAnisotropy();(screen.material as THREE.MeshBasicMaterial).map=texture;(screen.material as THREE.MeshBasicMaterial).color.set('#ffffff');(screen.material as THREE.MeshBasicMaterial).needsUpdate=true;});const gate=sign(p.name,x,4.8,-18,6.1,1.05);for(const side of [-2.5,2.5])beam(new THREE.Vector3(x+side,0,-18.2),new THREE.Vector3(x+side,4.7,-18.2),.055);const badge=label(p.gate,1.2,.7,{background:'#cf0d1b',size:170});badge.position.set(x-2.3,4.8,-17.89);scene.add(badge);target(id as StationId,group,new THREE.Vector3(x,2.3,-18));gate.traverse(child=>{child.userData.station=id;});interactive.push(gate);obstacle(x,-18,4,1.7);}
+function kiosk(id:string,x:number){const p=projects[id];const group=new THREE.Group();group.position.set(x,0,-18);scene.add(group);box(3,.25,1.5,mats.steel,0,.12,0,group);box(.6,1.3,.5,mats.steel,0,.85,0,group);roundBox(3.8,2.6,.22,mats.ink,0,2.5,0,group,.08);const screen=new THREE.Mesh(new THREE.PlaneGeometry(3.5,2.18),new THREE.MeshBasicMaterial({color:'#f0f2f4'}));screen.position.set(0,2.55,.12);group.add(screen);textureLoader.load('assets/'+p.image,texture=>{texture.colorSpace=THREE.SRGBColorSpace;texture.anisotropy=renderer.capabilities.getMaxAnisotropy();(screen.material as THREE.MeshBasicMaterial).map=texture;(screen.material as THREE.MeshBasicMaterial).color.set('#ffffff');(screen.material as THREE.MeshBasicMaterial).needsUpdate=true;});const gate=sign(p.name,x,4.8,-18,6.1,1.05);for(const side of [-2.5,2.5])beam(new THREE.Vector3(x+side,0,-18.2),new THREE.Vector3(x+side,4.7,-18.2),.055);const badge=label(p.gate,1.2,.7,{background:'#252a2e',color:'#f4d35b',size:150});badge.position.set(x-2.3,4.8,-17.89);scene.add(badge);target(id as StationId,group,new THREE.Vector3(x,2.3,-18));gate.traverse(child=>{child.userData.station=id;});interactive.push(gate);obstacle(x,-18,4,1.7);}
 ['lax','yay','tea','calc'].forEach((id,i)=>kiosk(id,-15+i*10));
 // Departures board: project names rendered onto actual scene signage.
 const board=sign('PROJECT DEPARTURES',-16,4,-5,8,1.05);const boardGroup=new THREE.Group();boardGroup.position.set(-16,2.35,-5);scene.add(boardGroup);box(8.15,2.5,.2,mats.ink,0,0,0,boardGroup);
@@ -105,7 +104,7 @@ const desk=new THREE.Group();desk.position.set(14,0,8);scene.add(desk);roundBox(
 const avatar=new THREE.Group();avatar.position.set(14,0,5.5);scene.add(avatar);box(.85,1.2,.45,mats.ink,0,1.32,0,avatar);const skin=new THREE.MeshStandardMaterial({color:'#bc957b',roughness:.85});const head=new THREE.Mesh(new THREE.SphereGeometry(.34,20,16),skin);head.position.set(0,2.18,0);avatar.add(head);const hair=new THREE.Mesh(new THREE.SphereGeometry(.35,16,12,0,Math.PI*2,0,Math.PI/2),mats.ink);hair.position.set(0,2.23,0);avatar.add(hair);for(const side of [-1,1]){box(.25,.18,.06,mats.ink,side*.16,2.2,.29,avatar);beam(new THREE.Vector3(side*.45,1.8,0),new THREE.Vector3(side*.42,1.35,.55),.13,mats.ink,avatar);box(.3,.65,.35,mats.ink,side*.25,.45,.15,avatar);const ear=new THREE.Mesh(new THREE.SphereGeometry(.15,12,8),mats.rubber);ear.position.set(side*.36,2.15,0);avatar.add(ear);}beam(new THREE.Vector3(-.35,2.3,0),new THREE.Vector3(.35,2.3,0),.055,mats.rubber,avatar);
 // Personal story station and first-class lounge.
 const about=sign('RGN  →  ZRH  →  LAX',-15,2.6,2,7,2.5,'FROM AVIATION TO SOFTWARE');target('about',about,new THREE.Vector3(-15,2.5,2));for(const x of [-17.5,-12.5])box(.12,1.6,.12,mats.steel,x,.8,2);obstacle(-15,2,7,.6);
-const lounge=new THREE.Group();lounge.position.set(16,0,-5);scene.add(lounge);box(11,.07,10,new THREE.MeshStandardMaterial({color:'#ccc3b7',roughness:1}),0,.03,0,lounge);for(const x of [-4,-2,2,4]){box(.9,.5,1.4,mats.ink,x,.45,-1,lounge);box(.9,.8,.2,mats.ink,x,.9,-1.55,lounge);}box(3,.15,1.6,mats.wood,0,.6,-.5,lounge);for(const x of [-4.5,4.5])box(.15,5,.15,mats.wood,x,2.5,-4.8,lounge);const loungeSign=sign('FIRST CLASS LOUNGE',16,4.8,-8,10,1.15,'HON CIRCLE MEMBER / LET’S CONNECT');target('lounge',loungeSign,new THREE.Vector3(16,2.2,-5));const loungeDesk=roundBox(4,1.3,1.5,mats.wood,15,.65,-2,scene,.12);target('lounge',loungeDesk,new THREE.Vector3(16,2,-3));const pass=label('ZLN / FIRST CLASS',3.4,.9,{background:'#252a2e',size:75,sub:'YOUR NEXT PROJECT STARTS HERE'});pass.position.set(15,1.9,-1.2);scene.add(pass);target('lounge',pass,new THREE.Vector3(15,1.9,-1.2));obstacle(15,-2,4,1.6);
+const lounge=new THREE.Group();lounge.position.set(16,0,-5);scene.add(lounge);box(11,.07,10,finish.carpet,0,.03,0,lounge);for(const x of [-4,-2,2,4]){box(.9,.5,1.4,mats.ink,x,.45,-1,lounge);box(.9,.8,.2,mats.ink,x,.9,-1.55,lounge);}box(3,.15,1.6,mats.wood,0,.6,-.5,lounge);for(const x of [-4.5,4.5])box(.15,5,.15,mats.wood,x,2.5,-4.8,lounge);const loungeSign=sign('FIRST CLASS LOUNGE',16,4.8,-8,10,1.15,'HON CIRCLE MEMBER / LET’S CONNECT');target('lounge',loungeSign,new THREE.Vector3(16,2.2,-5));const loungeDesk=roundBox(4,1.3,1.5,mats.wood,15,.65,-2,scene,.12);target('lounge',loungeDesk,new THREE.Vector3(16,2,-3));const pass=label('ZLN / FIRST CLASS',3.4,.9,{background:'#252a2e',size:75,sub:'YOUR NEXT PROJECT STARTS HERE'});pass.position.set(15,1.9,-1.2);scene.add(pass);target('lounge',pass,new THREE.Vector3(15,1.9,-1.2));obstacle(15,-2,4,1.6);
 
 // Merge static surfaces by material; interactive screens and moving parts stay separate.
 scene.updateMatrixWorld(true);
@@ -127,7 +126,7 @@ let desiredY=scrollY,chapter=0,lastChapter=-1,lastTime=performance.now(),elapsed
 const targetPosition=new THREE.Vector3(),targetLook=new THREE.Vector3(),poseCamera=new THREE.PerspectiveCamera();
 function measure(){stops.forEach(stop=>stop.offset=stop.element.getBoundingClientRect().top+scrollY);desiredY=scrollY;}
 window.addEventListener('scroll',()=>{desiredY=scrollY;},{passive:true});
-window.addEventListener('resize',()=>{measure();camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);renderer.setPixelRatio(Math.min(devicePixelRatio,coarse.matches?1.4:1.75));});
+window.addEventListener('resize',()=>{measure();camera.aspect=innerWidth/innerHeight;camera.fov=innerWidth<700&&chapter===5?105:55;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);renderer.setPixelRatio(Math.min(devicePixelRatio,coarse.matches?1.4:1.75));});
 new ResizeObserver(measure).observe(document.querySelector('#journey')!);
 function travel(id:string){const stop=stops.find(s=>s.id===id);if(!stop)return;stop.element.scrollIntoView({behavior:reduced.matches?'instant':'smooth',block:'start'});}
 function modalOpen(){return detail.open||directory.open;}
@@ -166,9 +165,10 @@ function render(time:number){requestAnimationFrame(render);if(document.hidden){l
  if(reduced.matches){targetPosition.copy(stops[chapter].position);targetLook.copy(stops[chapter].look);}else{if(segment===4)targetPosition.copy(finalApproach.getPointAt(eased));else targetPosition.lerpVectors(a.position,b.position,eased);targetLook.lerpVectors(a.look,b.look,eased);}
  const damping=reduced.matches?1:1-Math.exp(-dt*10);
  camera.position.lerp(targetPosition,damping);poseCamera.position.copy(targetPosition);poseCamera.lookAt(targetLook);camera.quaternion.slerp(poseCamera.quaternion,damping);
- if(chapter!==lastChapter){lastChapter=chapter;$('#location').textContent='ZRH · '+stops[chapter].label;$('#journey-count').textContent=String(chapter+1).padStart(2,'0')+' / 06';$('#journey-destination').textContent=stops[chapter].label;$('#runway-controls').hidden=chapter!==5;document.querySelectorAll<HTMLButtonElement>('header [data-travel]').forEach(button=>{const active=button.dataset.travel===stops[chapter].id;button.classList.toggle('active',active);if(active)button.setAttribute('aria-current','location');else button.removeAttribute('aria-current');});}
+ if(chapter!==lastChapter){lastChapter=chapter;camera.fov=innerWidth<700&&chapter===5?105:55;camera.updateProjectionMatrix();$('#location').textContent='ZRH · '+stops[chapter].label;$('#journey-count').textContent=String(chapter+1).padStart(2,'0')+' / 06';$('#journey-destination').textContent=stops[chapter].label;$('#runway-controls').hidden=chapter!==5;document.querySelectorAll<HTMLButtonElement>('header [data-travel]').forEach(button=>{const active=button.dataset.travel===stops[chapter].id;button.classList.toggle('active',active);if(active)button.setAttribute('aria-current','location');else button.removeAttribute('aria-current');});}
  const max=document.documentElement.scrollHeight-innerHeight;$('#journey-progress-fill').style.transform='scaleX('+Math.min(1,scrollY/Math.max(1,max))+')';
  if(flight&&ambience&&(!reduced.matches||flight.manual)){flight.time+=dt;const pose=flightPose(flight.kind,flight.time);plane.position.set(pose.x,pose.y,pose.z);plane.rotation.set(-pose.pitch,Math.PI/2,0);airliner.gear.position.y=(1-pose.gear)*1.65;airliner.gear.visible=pose.gear>.04;airliner.fans.forEach(fan=>fan.rotation.z+=dt*32);airliner.wheels.forEach(wheel=>wheel.rotation.x+=dt*9);$('#runway-status').textContent=pose.phase;if(pose.done){if(flight.kind==='takeoff'){plane.visible=false;$('#runway-status').textContent='AIRBORNE';}else $('#runway-status').textContent='LANDED / ROLLOUT COMPLETE';flight=null;}}else if(ambience&&!reduced.matches){airliner.fans.forEach(fan=>fan.rotation.z+=dt*4);}
+ zurich.update(elapsed);
  routePulse.position.copy(routeCurve.getPointAt((elapsed*.045)%1));routePulse.visible=ambience&&!reduced.matches;
  bags.forEach((bag,i)=>{const angle=elapsed*.13+i*Math.PI*2/bags.length;bag.position.set(-12+Math.cos(angle)*4.1,.78,11+Math.sin(angle)*2.1);bag.rotation.y=-angle;});
  const doorOpen=Math.abs(camera.position.x)<5&&Math.abs(camera.position.z-9)<7;doors[0].position.x=THREE.MathUtils.damp(doors[0].position.x,doorOpen?-3.1:-1.05,reduced.matches?100:5,dt);doors[1].position.x=-doors[0].position.x;
@@ -177,7 +177,7 @@ function render(time:number){requestAnimationFrame(render);if(document.hidden){l
 }
 canvas.addEventListener('webglcontextlost',event=>{event.preventDefault();$('#webgl-fallback').hidden=false;});
 measure();if(location.hash==='#work')travel('projects');if(location.hash==='#contact')travel('lounge');initialized=true;$('#scene-state').textContent='SCROLL TO EXPLORE';requestAnimationFrame(render);
-Object.defineProperty(window,'terminalState',{get:()=>({mode:'scroll',chapter:stops[chapter].id,scrollY,position:{x:camera.position.x,y:camera.position.y,z:camera.position.z},ambience,drawCalls:renderer.info.render.calls,triangles:renderer.info.render.triangles,ready:initialized,aircraft:{position:{x:plane.position.x,y:plane.position.y,z:plane.position.z},phase:flight?.kind||'stand',visible:plane.visible,loaded:airliner.state.loaded,fanCount:airliner.fans.length,wheelCount:airliner.wheels.length,source:airliner.state.source,error:airliner.state.error}})});
+Object.defineProperty(window,'terminalState',{get:()=>({mode:'scroll',chapter:stops[chapter].id,scrollY,position:{x:camera.position.x,y:camera.position.y,z:camera.position.z},ambience,drawCalls:renderer.info.render.calls,triangles:renderer.info.render.triangles,ready:initialized,airport:zurich.style,fleet:{a350:fleet.a350.state.loaded,b777:fleet.b777.state.loaded},aircraft:{type:selectedAircraft,position:{x:plane.position.x,y:plane.position.y,z:plane.position.z},phase:flight?.kind||'stand',visible:plane.visible,loaded:airliner.state.loaded,fanCount:airliner.fans.length,wheelCount:airliner.wheels.length,source:airliner.state.source,error:airliner.state.error}})});
 
 
 }

@@ -14,6 +14,8 @@ try{
  assert.equal(await page.evaluate(()=>window.terminalState.aircraft.fanCount),2);
  assert.equal(await page.evaluate(()=>window.terminalState.aircraft.wheelCount),10);
  assert.equal(await page.evaluate(()=>window.terminalState.mode),'scroll');
+ assert.equal(await page.evaluate(()=>window.terminalState.airport),'zurich-dock-e');
+ assert.equal(await page.evaluate(()=>window.terminalState.fleet.b777),true);
  assert.equal(await page.locator('#joystick,#mouse-look,.crosshair').count(),0);
  const before=await page.evaluate(()=>window.terminalState.position);
  await page.keyboard.down('KeyW');await page.waitForTimeout(200);await page.keyboard.up('KeyW');
@@ -43,6 +45,12 @@ try{
  await page.waitForTimeout(200);assert.equal(await page.evaluate(()=>window.terminalState.aircraft.position.x),paused);
  await page.locator('#runway-park').click();await page.locator('#watch-takeoff').click();
  await page.waitForFunction(()=>window.terminalState.aircraft.phase==='takeoff');await page.locator('#runway-park').click();
+ await page.locator('[data-aircraft="b777"]').click();
+ assert.equal(await page.evaluate(()=>window.terminalState.aircraft.type),'b777');
+ assert.equal(await page.evaluate(()=>window.terminalState.aircraft.wheelCount),14);
+ assert.equal(await page.locator('#aircraft-name').textContent(),'BOEING 777-300ER');
+ await page.locator('#watch-takeoff').click();await page.waitForFunction(()=>window.terminalState.aircraft.phase==='takeoff');await page.locator('#runway-park').click();
+ await page.locator('[data-aircraft="a350"]').click();assert.equal(await page.evaluate(()=>window.terminalState.aircraft.type),'a350');
  await page.locator('#home').click();await page.waitForFunction(()=>window.terminalState.chapter==='arrivals');
  await page.emulateMedia({reducedMotion:'no-preference'});await page.mouse.wheel(0,500);await page.waitForTimeout(900);
  assert.ok(await page.evaluate(()=>window.terminalState.position.z<21));

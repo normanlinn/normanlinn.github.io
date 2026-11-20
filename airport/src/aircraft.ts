@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { addTailplanes } from './airframe-parts';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { DecalGeometry } from 'three/addons/geometries/DecalGeometry.js';
 
@@ -70,6 +71,7 @@ export function buildAirliner(maxAnisotropy:number){
    for(let j=0;j<3;j++){x+=positions.getX(i+j)/3;y+=positions.getY(i+j)/3;z+=positions.getZ(i+j)/3;const u=uv.getX(i+j),v=uv.getY(i+j);if(u<.81||u>.94||v<0||v>.145)inFan=false;}
    const fin=Math.abs(x)<.55&&y>1.65&&z< -10;
    const fan=inFan&&Math.abs(x)>3.5&&Math.abs(x)<8&&z>5&&y<0;
+   if(z< -11&&Math.abs(x)>1.5&&y<1.5)continue;
    const bucket=buckets[fin?1:fan?(x<0?2:3):0];
    for(let j=0;j<3;j++){bucket.p.push(positions.getX(i+j),positions.getY(i+j),positions.getZ(i+j));bucket.n.push(normals.getX(i+j),normals.getY(i+j),normals.getZ(i+j));bucket.uv.push(uv.getX(i+j),uv.getY(i+j));}
   }
@@ -95,6 +97,7 @@ export function buildAirliner(maxAnisotropy:number){
    decal(meshes[0]!,letteringMap,new THREE.Vector3(side*1.75,.18,10.1),side,new THREE.Vector3(6.9,1.7,1.4));
    decal(meshes[1]!,flagMap,new THREE.Vector3(side*.15,4.6,-16.35),side,new THREE.Vector3(3.2,3.2,.55));
   }
+  addTailplanes(model,new THREE.MeshPhysicalMaterial({color:'#e2e5e6',roughness:.35,metalness:.15,side:THREE.DoubleSide}),'a350');
   group.add(model);group.visible=true;state.loaded=true;
   geometry.dispose();if(expanded!==geometry)expanded.dispose();
  }).catch(error=>{state.error=true;console.warn('Aircraft model could not load.',error);});

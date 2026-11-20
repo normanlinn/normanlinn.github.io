@@ -10,7 +10,20 @@ Changes for ZLN Terminal by Zaw Lin Naing:
 - SWISS-inspired red-and-white livery and projected lettering/crosses.
 - Animated fan groups and additional retractable landing gear.
 - Integration with the portfolio landing and takeoff sequences.
+- Replacement horizontal tailplanes with thinner, tapered airfoil surfaces.
 
 The model creator does not endorse this adaptation.
 The SWISS name and livery identify the requested aircraft inspiration.
 Full base-asset license: aircraft-license.txt
+
+Boeing 777-300ER interpretation
+Original procedural geometry created for ZLN Terminal by Zaw Lin Naing.
+Proportions reference Boeing and SWISS published length (73.9 m) and span (64.8 m).
+https://www.boeing.com/commercial/777
+https://www.swiss.com/xk/en/discover/fleet/boeing
+This is a lightweight artistic interpretation, not an engineering or flight-training model.
+
+Airport and landscape
+Original Dock E-inspired layout, procedural surface textures and Swiss mountain scenery.
+Architectural reference: exposed concrete, metal structures, terrazzo and glass facades.
+https://www.flughafen-zuerich.ch/en/company/flughafen-zuerich/airport-development/old-conctruction-projects/dock-e
