@@ -8,15 +8,18 @@
     "dev": "node serve.mjs",
     "test": "node --test tests/flight.test.mjs",
     "test:browser": "node tests/smoke.mjs",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "format": "prettier --write src site.css tests build.mjs serve.mjs",
+    "format:check": "prettier --check src site.css tests build.mjs serve.mjs"
   },
   "dependencies": {
-    "three": "*"
+    "three": "0.187.0"
   },
   "devDependencies": {
-    "@types/three": "*",
-    "esbuild": "*",
-    "playwright": "^1.65.1",
-    "typescript": "*"
+    "@types/three": "0.187.0",
+    "esbuild": "0.28.2",
+    "playwright": "1.65.1",
+    "prettier": "3.3.3",
+    "typescript": "7.0.2"
   }
 }
