@@ -107,3 +107,33 @@ dialog .dialog-close{background:#e7ede5;border-color:#d9e1d5;border-radius:12px;
 .bottom-bar{background:#f7f9f6eb;border-radius:16px}.view-controls .text-button{color:#344e5a}.section-wayfinding{color:#344e5a;font-size:10px}
 .journey .runway-card{width:325px}.runway-card .station-description{font-size:14px}.runway-card .station-email{font-size:12px;color:#526b78}
 @media(max-width:700px){.runway-controls{top:168px;left:16px;right:16px;max-width:none;gap:6px 9px;padding:10px}.fleet-heading #aircraft-name{font-size:11px}.fleet-heading #runway-status{font-size:9px}.runway-controls button{font-size:11px;min-height:34px}.fleet-switch button{padding:7px 9px;font-size:11px}.journey-section#runway{padding-top:450px}.station-card .arrival-description,.station-description{font-size:15px}.gate-list strong{font-size:12px}.section-wayfinding{font-size:9px}}
+
+/* Architectural UI: clear type, restrained radii, a shared red navigation marker. */
+.brand-mark{width:34px;height:34px;display:block;flex:none}.wordmark{gap:12px;letter-spacing:-.025em}.wordmark-light{margin-left:5px;letter-spacing:.04em;font-size:.78em}
+.topbar{border-radius:14px;background:#1b252ef5;border:1px solid #65737c70;box-shadow:0 8px 32px #15212a20}
+.topbar nav{position:relative;isolation:isolate}.topbar nav button{position:relative;z-index:1;border-radius:8px;color:#e1e7eb;transition:color .2s,background .2s}.topbar nav button.active,.topbar nav button.active:hover{background:transparent;color:#fff;box-shadow:none}.topbar nav button:hover{background:#ffffff0d;color:#fff}
+.nav-indicator{position:absolute;left:0;top:0;background:#cd1527;border:1px solid #f2566259;border-radius:8px;z-index:0;pointer-events:none;opacity:0;transition:transform .5s cubic-bezier(.22,1,.36,1),width .5s cubic-bezier(.22,1,.36,1),opacity .2s}
+.topbar #directory-open{border-radius:8px;background:transparent;color:#edf1f4;font-size:13px}.topbar #directory-open:hover{background:#ffffff12;border-color:#a5b2ba}
+.button,.gate-list button,.skill-chips span,.fleet-switch,.runway-controls button,.round-button{border-radius:9px}.scene-status{border-radius:7px}.member-pill{border-radius:6px!important;letter-spacing:.08em}
+/* Keep the active card within the chrome-free viewing area at every scroll position. */
+.journey-section{min-height:112svh!important}.journey-section:first-child{min-height:100svh!important}
+.journey .station-card{position:fixed!important;top:calc(50svh + 25px)!important;left:clamp(24px,4.5vw,76px)!important;right:auto!important;bottom:auto!important;transform:translateY(-50%)!important;width:min(390px,calc(100vw - 48px));max-height:calc(100svh - 270px);overflow:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#a3afb7 transparent;border-radius:18px;padding:30px;background:radial-gradient(circle at var(--spot-x,40%) var(--spot-y,20%),#fffffffc,#f0f3f4f5);box-shadow:0 20px 55px #172c3930,inset 0 1px 0 #fff;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .3s,visibility .3s,border-color .3s}
+.journey .card-right .station-card{left:auto!important;right:clamp(24px,4.5vw,76px)!important}
+.journey .is-current .station-card{opacity:1;visibility:visible;pointer-events:auto}
+.journey .lounge-card{background:radial-gradient(circle at var(--spot-x,40%) var(--spot-y,20%),#344450fa,#17232df7);border-color:#8a9aa36b;box-shadow:0 20px 65px #101e2b3d,inset 0 1px 0 #ffffff17}
+.station-card h2{font-size:36px;line-height:1.13}.station-card .eyebrow{margin-bottom:18px}.station-description{margin:18px 0}.mini-pass{padding:17px 0;margin:20px 0}.station-card .arrival-description{margin:18px 0}.station-card h1{font-size:60px}
+.journey #runway .station-card{top:auto!important;bottom:110px!important;transform:none!important;width:320px;max-height:calc(100svh - 420px)}
+.clear-window-view #runway .station-card{opacity:0!important;visibility:hidden!important;pointer-events:none!important}
+.bottom-bar{border-radius:12px;background:#f7f9fbf2;border-color:#dce4e8}.journey-progress-track{height:3px}.view-controls .text-button{border-radius:7px}.runway-controls{border-radius:12px}
+@media(min-width:1600px){.journey .station-card{width:420px;padding:34px}}
+@media(max-width:700px){.brand-mark{width:29px;height:29px}.topbar{border-radius:13px}.topbar nav button{border-radius:7px}.wordmark-light{font-size:.72em}.journey .station-card,.journey .card-right .station-card{left:16px!important;right:16px!important;width:auto;top:calc(50svh + 35px)!important;max-height:calc(100svh - 300px);padding:23px;border-radius:16px}.station-card h1{font-size:46px}.station-card h2{font-size:30px}.station-card .eyebrow{font-size:10px;margin-bottom:15px}.station-card .arrival-subtitle{font-size:22px}.journey #runway .station-card{top:auto!important;bottom:110px!important;width:auto;max-height:calc(100svh - 450px)}.arrival-footer{margin-top:17px;padding-top:15px}.journey-section{padding:0!important}.station-card .arrival-description{font-size:14px}.section-wayfinding{bottom:105px}}
+@media(prefers-reduced-motion:reduce){.nav-indicator,.journey .station-card{transition:none!important}}
+
+#runway-camera,#runway-camera-reset{border:1px solid #b9c7ce;background:transparent}.runway-controls{transition:box-shadow .3s}.runway-controls:focus-within{box-shadow:0 12px 40px #15243125}.runway-controls [aria-pressed=true]{background:#243b4b;color:white}
+.button svg,.gate-list svg{display:block;flex:none;transition:translate .25s}.button:hover svg{translate:2px -2px}.station-card::-webkit-scrollbar{width:5px}.station-card::-webkit-scrollbar-thumb{background:#a3afb7;border-radius:5px}.station-card::-webkit-scrollbar-track{background:transparent}
+@media(max-width:700px){.journey #runway .station-card{max-height:calc(100svh - 500px)}.runway-controls{gap:6px;padding:10px}#runway-camera,#runway-camera-reset{font-size:10px}}
+@media(prefers-reduced-motion:reduce){.button svg,.gate-list svg{transition:none}}
+
+#runway-camera[aria-pressed=true]{background:#243b4b;color:#fff;border-color:#243b4b}
+
+.journey-section:not(.is-current) .section-wayfinding{visibility:hidden}

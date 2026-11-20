@@ -37,8 +37,9 @@ The runway fleet includes the licensed A350 and an original procedural **777-300
 | Close a panel | Escape or close button | Close button |
 | Choose an aircraft | Watch runway, then A350 or 777-300ER | Same controls |
 | See aircraft sequences | Landing or Takeoff | Same controls |
+| Inspect the aircraft | Watch runway enables drag-to-look; Reset view restores the view | Drag in Explore view; Resume scroll view restores swiping |
 
-The page is **scroll-only**: there are no walking keys, joystick, drag-to-look, or pointer-lock controls. The camera follows a curated route between Arrivals, Projects, My Story, Developer Desk, First Class Lounge, and Runway Observation.
+The main journey is **scroll-guided** with no walking keys, joystick or pointer lock. Runway Explore view provides a bounded drag-to-look camera; the main journey remains available through navigation or scroll. The camera follows a curated route between Arrivals, Projects, My Story, Developer Desk, First Class Lounge, and Runway Observation.
 
 Reduced-motion mode uses static camera cuts between destinations. Ambient luggage, route lights, and engine movement can be paused. Selecting a flight explicitly starts that aircraft sequence; Pause ambience pauses it too.
 
@@ -133,3 +134,7 @@ The A350 base model is © 2026 **[amvlab](https://github.com/amvlab/aircraft-mod
 ### Zürich-inspired terminal update
 
 The airport is an original portfolio layout inspired by [Dock E’s concrete, metal, terrazzo and glass](https://www.flughafen-zuerich.ch/en/company/flughafen-zuerich/airport-development/old-conctruction-projects/dock-e), rather than a measured reconstruction. All landscape and surface textures are generated locally; no texture-service requests are required. The 777 geometry is original and separate from the licensed A350 base asset.
+
+### Interface and aircraft refinements
+
+The active section card stays between the fixed header and footer, with internal scrolling for long content. Navigation uses a moving Swiss-red marker and outline icons, while the favicon, wing monogram and social preview share the ZLN identity. Card fades, an animated code editor, restrained avatar motion and damped gear movement respect the ambient pause and reduced-motion controls. The 777 fuselage now uses shaped elliptical sections, skin-mounted windows and projected cockpit/door details.

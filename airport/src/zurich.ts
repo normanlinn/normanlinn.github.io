@@ -25,8 +25,8 @@ export function buildZurich(scene:THREE.Scene,m:Palette,coarse:boolean){
  for(let z=-27;z<=24;z+=10){for(const x of [-22.5,22.5]){box(.65,9,.65,concrete,x,4.4,z);box(.76,.08,.76,m.steel,x,.04,z);}}
  for(const x of [-24,24]){box(.08,8.8,60,m.glass,x,4.4,-4);for(let z=-31;z<=26;z+=4)box(.1,9,.14,structure,x,4.4,z);}
  box(48,8.8,.045,m.glass,0,4.4,-31);
- for(let x=-24;x<=24;x+=8){box(.14,9,.18,structure,x,4.4,-31);if(Math.abs(x)===24)box(.3,9,.3,concrete,x,4.4,-32);}
- box(48,.1,.16,structure,0,3.4,-31);box(48,.1,.16,structure,0,7,-31);
+ for(const x of [-24,24]){box(.14,9,.18,structure,x,4.4,-31);if(Math.abs(x)===24)box(.3,9,.3,concrete,x,4.4,-32);}
+ box(48,.1,.16,structure,0,7,-31);
  // Swiss yellow-on-charcoal bilingual wayfinding suspended above the clear aisle.
  panel('E   Gates E42–67',10,1.7,0,6.8,-9,'#f6d54b','#20282d','Abflug / Departures     •     Projects');
  for(const x of [-4.4,4.4])box(.035,2,.035,m.steel,x,8.1,-9);

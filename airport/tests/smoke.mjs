@@ -16,6 +16,7 @@ try{
  assert.equal(await page.evaluate(()=>window.terminalState.mode),'scroll');
  assert.equal(await page.evaluate(()=>window.terminalState.airport),'zurich-dock-e');
  assert.equal(await page.evaluate(()=>window.terminalState.fleet.b777),true);
+ assert.ok(await page.locator('.brand-mark').evaluate(image=>image.complete&&image.naturalWidth>0));
  assert.equal(await page.locator('#joystick,#mouse-look,.crosshair').count(),0);
  const before=await page.evaluate(()=>window.terminalState.position);
  await page.keyboard.down('KeyW');await page.waitForTimeout(200);await page.keyboard.up('KeyW');
@@ -26,6 +27,7 @@ try{
   await page.locator('header [data-travel="'+id+'"]').click();
   await page.waitForFunction(id=>window.terminalState.chapter===id,id);
   assert.ok(await page.locator('#'+id+' .station-card').isVisible());
+  const bounds=await page.locator('#'+id+' .station-card').boundingBox();const header=await page.locator('.topbar').boundingBox();const footer=await page.locator('.bottom-bar').boundingBox();assert.ok(bounds.y>=header.y+header.height+10,'Card overlaps header');assert.ok(bounds.y+bounds.height<=footer.y-5,'Card overlaps footer');
  }
  for(const [id,url]of [['lax','https://employeeshuttlelax.com/'],['yay','https://yaykyawfair.vercel.app/'],['tea','https://burmantea.vercel.app/'],['calc','https://normanlinn.github.io/calculus-study-site/']]){
   await page.locator('#directory-open').click();await page.locator('#directory [data-directory="'+id+'"]').click();
@@ -34,7 +36,10 @@ try{
  await page.locator('#lounge [data-directory="lounge"]').click();await page.locator('#copy-email').click();await page.waitForFunction(()=>document.querySelector('#copy-email').textContent==='Copied!');await page.locator('#detail .dialog-close').click();
  await page.locator('#watch-runway').click();
  await page.waitForFunction(()=>window.terminalState.chapter==='runway');
- await page.locator('#runway-view').click();assert.equal(await page.locator('#runway-view').getAttribute('aria-pressed'),'true');await page.locator('#runway-view').click();
+ await page.waitForFunction(()=>window.terminalState.cameraMode==='explore');
+ const cameraBefore=await page.evaluate(()=>window.terminalState.position);await page.mouse.move(700,480);await page.mouse.down();await page.mouse.move(850,510,{steps:8});await page.mouse.up();await page.waitForTimeout(250);assert.notDeepEqual(await page.evaluate(()=>window.terminalState.position),cameraBefore,'Runway drag did not move the camera');
+ await page.locator('#runway-camera-reset').click();await page.locator('#runway-camera').click();assert.equal(await page.evaluate(()=>window.terminalState.cameraMode),'journey');
+ assert.equal(await page.locator('#runway-view').getAttribute('aria-pressed'),'true');await page.locator('#runway-view').click();await page.locator('#runway-view').click();
  await page.locator('#watch-landing').click();
  await page.waitForFunction(()=>window.terminalState.aircraft.phase==='landing'&&window.terminalState.aircraft.position.x< -50);
  const aircraftX=await page.evaluate(()=>window.terminalState.aircraft.position.x);
