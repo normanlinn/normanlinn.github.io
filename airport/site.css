@@ -3187,3 +3187,37 @@ dialog.is-closing::backdrop {
     animation: none;
   }
 }
+
+/* Quick view: a plain, fast page with the case studies, for visitors in a hurry. */
+.quick-view-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 38px;
+  padding: 0 12px;
+  border-radius: 8px;
+  border: 1px solid #ffffff2c;
+  color: #edf1f4;
+  font-size: 13px;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color 0.2s;
+}
+.quick-view-link:hover {
+  background: #ffffff18;
+}
+@media (max-width: 700px) {
+  /* The phone top bar is a grid: wordmark, Quick view and the menu button on row 1, nav on row 2. */
+  .topbar {
+    grid-template-columns: 1fr auto auto;
+  }
+  .quick-view-link {
+    grid-column: 2;
+    grid-row: 1;
+    min-height: 34px;
+    padding: 0 10px;
+    font-size: 12px;
+  }
+  .topbar #directory-open {
+    grid-column: 3;
+  }
+}

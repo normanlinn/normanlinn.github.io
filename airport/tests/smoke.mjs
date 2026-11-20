@@ -209,6 +209,52 @@ try {
     await sized.close();
   }
 
+  // The Quick view and the article load without the 3D terminal, show every case study, and
+  // every clip and poster they reference exists.
+  for (const path of ['quick/', 'notes/laxcommute/']) {
+    const plain = await browser.newPage({ viewport: { width: 1280, height: 800 } });
+    const plainErrors = [];
+    plain.on('pageerror', error => plainErrors.push(error.message));
+    const response = await plain.goto(new URL(path, base + '/').href, { waitUntil: 'networkidle' });
+    assert.equal(response.status(), 200, `${path} did not load`);
+    if (path === 'quick/') {
+      assert.equal(await plain.locator('.case-study').count(), 4, 'Quick view should show four case studies');
+      for (const id of ['lax', 'yay', 'tea', 'calc'])
+        assert.equal(
+          await plain.locator(`#case-${id} .case-sections section`).count(),
+          3,
+          `Case study ${id} should have problem, build and hard-part sections`,
+        );
+      assert.ok(await plain.locator('a[href^="mailto:"]').count(), 'Quick view has no email link');
+    }
+    const media = await plain.evaluate(() =>
+      [...document.querySelectorAll('video.case-clip')].flatMap(v => [v.src, v.poster]),
+    );
+    for (const url of media) {
+      const status = await plain.evaluate(async url => (await fetch(url, { method: 'HEAD' })).status, url);
+      assert.equal(status, 200, `Missing media: ${url}`);
+    }
+    assert.equal(await plain.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
+    assert.deepEqual(plainErrors, [], `Errors on ${path}`);
+    await plain.close();
+  }
+  // The terminal links to the Quick view, inside the top bar, on desktop and phone.
+  for (const viewport of [
+    { width: 1280, height: 800 },
+    { width: 375, height: 812 },
+  ]) {
+    const linkCheck = await browser.newPage({ viewport, reducedMotion: 'reduce' });
+    await linkCheck.goto(base, { waitUntil: 'networkidle' });
+    const link = await linkCheck.locator('.topbar a[href="quick/"]').boundingBox();
+    const bar = await linkCheck.locator('.topbar').boundingBox();
+    assert.ok(link, 'Quick view link missing');
+    assert.ok(
+      link.y >= bar.y && link.y + link.height <= bar.y + bar.height,
+      `Quick view link outside the top bar at ${viewport.width}px`,
+    );
+    await linkCheck.close();
+  }
+
   const fallback = await browser.newPage();
   await fallback.addInitScript(() => {
     const original = HTMLCanvasElement.prototype.getContext;
@@ -222,7 +268,7 @@ try {
   await fallback.locator('#directory [data-directory="about"]').click();
   await fallback.locator('#detail').waitFor({ state: 'visible' });
   console.log(
-    'Passed: scroll-led camera, no walking controls, six destinations, project links, email copy, flights, pause, mobile layout, motion-on loads, cards clear of the bars at 4 sizes, and WebGL fallback.',
+    'Passed: scroll-led camera, no walking controls, six destinations, project links, email copy, flights, pause, mobile layout, motion-on loads, cards clear of the bars at 4 sizes, Quick view and article with their clips, and WebGL fallback.',
   );
 } finally {
   await browser.close();

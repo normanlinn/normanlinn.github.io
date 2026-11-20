@@ -1,0 +1,446 @@
+/* Quick view and article pages: the terminal's fonts and palette on a plain, fast page.
+   case-study.css is appended to this file by build.mjs. */
+@font-face {
+  font-family: Terminal;
+  src: url(../assets/instrument-sans.woff2) format('woff2');
+  font-weight: 400 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Instrument Serif';
+  src: url(../assets/instrument-serif-italic.woff2) format('woff2');
+  font-style: italic;
+  font-display: swap;
+}
+:root {
+  --ink: #20292d;
+  --muted: #5c686d;
+  --line: #dbe1df;
+  --paper: #fbfcfb;
+  --red: #d5121e;
+  --red-dark: #b30f1c;
+  color: var(--ink);
+  background: #f3f5f4;
+  font-family: Terminal, Arial, sans-serif;
+  font-synthesis: none;
+  -webkit-font-smoothing: antialiased;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  line-height: 1.6;
+}
+a {
+  color: inherit;
+}
+img,
+video {
+  max-width: 100%;
+}
+.skip {
+  position: absolute;
+  left: 12px;
+  top: -60px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: var(--ink);
+  color: #fff;
+  z-index: 10;
+}
+.skip:focus {
+  top: 12px;
+}
+:focus-visible {
+  outline: 3px solid #2f6fdf;
+  outline-offset: 3px;
+}
+
+/* Header */
+.quick-top {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px clamp(16px, 4vw, 40px);
+  background: #1f2a2fee;
+  color: #fff;
+  backdrop-filter: blur(10px);
+}
+.quick-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  text-decoration: none;
+}
+.quick-top nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 18px;
+  font-size: 14px;
+}
+.quick-top nav a {
+  text-decoration: none;
+  opacity: 0.85;
+  padding: 6px 0;
+}
+.quick-top nav a:hover {
+  opacity: 1;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.quick-top .quick-3d {
+  color: #ffd75e;
+  opacity: 1;
+}
+
+main {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 clamp(16px, 4vw, 40px);
+}
+
+/* Intro */
+.quick-hero {
+  padding: clamp(48px, 9vw, 96px) 0 clamp(36px, 6vw, 64px);
+  border-bottom: 1px solid var(--line);
+}
+.quick-eyebrow {
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 14px;
+}
+.quick-hero h1 {
+  font-size: clamp(44px, 8vw, 84px);
+  line-height: 1;
+  letter-spacing: -0.045em;
+  font-weight: 600;
+  margin: 0 0 22px;
+}
+.quick-lead {
+  font-size: clamp(18px, 2.2vw, 22px);
+  line-height: 1.5;
+  max-width: 760px;
+  margin: 0 0 18px;
+  color: #2b3a40;
+}
+.quick-open {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 500;
+  margin: 0 0 26px;
+}
+.quick-open span {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #2f9e5b;
+  box-shadow: 0 0 0 4px #2f9e5b22;
+}
+.quick-actions,
+.panel-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 46px;
+  padding: 12px 18px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  border: 1px solid transparent;
+  transition:
+    background-color 0.2s,
+    border-color 0.2s;
+}
+.button.primary {
+  background: var(--red);
+  color: #fff;
+}
+.button.primary:hover {
+  background: var(--red-dark);
+}
+.button.secondary {
+  background: var(--paper);
+  border-color: var(--line);
+}
+.button.secondary:hover {
+  border-color: #9fb0aa;
+}
+
+/* Work */
+.quick-work {
+  padding: clamp(40px, 7vw, 72px) 0 12px;
+}
+.quick-work > h2,
+.quick-columns h2,
+.quick-contact h2 {
+  font-size: clamp(28px, 4vw, 40px);
+  letter-spacing: -0.035em;
+  font-weight: 600;
+  margin: 0 0 18px;
+}
+.quick-index {
+  list-style: none;
+  margin: 0 0 30px;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.quick-index a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  text-decoration: none;
+  font-size: 14px;
+}
+.quick-index span {
+  font-size: 11px;
+  font-weight: 700;
+  color: #f4d35b;
+  background: #222b2f;
+  padding: 2px 6px;
+  border-radius: 5px;
+}
+.case-study {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: clamp(20px, 3.5vw, 36px);
+  margin: 0 0 22px;
+  scroll-margin-top: 80px;
+}
+.case-study h3 {
+  font-size: clamp(26px, 3.4vw, 34px);
+  letter-spacing: -0.035em;
+  line-height: 1.15;
+  font-weight: 600;
+  margin: 10px 0 2px;
+}
+.gate-tag {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #f4d35b;
+  background: #232b2f;
+  border-radius: 6px;
+  padding: 4px 8px;
+}
+.panel-kind {
+  font-size: 13px;
+  color: var(--muted);
+  margin: 0;
+}
+.project-preview {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16/10;
+  object-fit: cover;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+}
+
+/* About, toolkit, writing */
+.quick-columns {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr 1fr;
+  gap: clamp(20px, 4vw, 44px);
+  padding: clamp(36px, 6vw, 64px) 0;
+  border-top: 1px solid var(--line);
+}
+.quick-columns h2 {
+  font-size: 22px;
+}
+.quick-columns p {
+  margin: 0;
+  color: #34444a;
+}
+.quick-link {
+  font-weight: 600;
+  text-underline-offset: 4px;
+}
+.quick-contact {
+  padding: clamp(36px, 6vw, 64px) 0 clamp(48px, 8vw, 88px);
+  border-top: 1px solid var(--line);
+}
+.quick-email {
+  font-size: clamp(20px, 3vw, 28px);
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+.quick-footer {
+  border-top: 1px solid var(--line);
+  padding: 22px clamp(16px, 4vw, 40px);
+  font-size: 13px;
+  color: var(--muted);
+  text-align: center;
+}
+
+/* Article */
+.article {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: clamp(40px, 8vw, 88px) 0 clamp(48px, 8vw, 88px);
+}
+.article h1 {
+  font-size: clamp(36px, 6vw, 56px);
+  line-height: 1.08;
+  letter-spacing: -0.04em;
+  font-weight: 600;
+  margin: 8px 0 18px;
+}
+.article .article-meta {
+  color: var(--muted);
+  font-size: 14px;
+  margin: 0 0 28px;
+}
+.article h2 {
+  font-size: 24px;
+  letter-spacing: -0.02em;
+  margin: 40px 0 10px;
+}
+.article p,
+.article li {
+  font-size: 17px;
+  line-height: 1.75;
+  color: #2b3a40;
+}
+.article code {
+  font-size: 0.9em;
+  background: #e8eeec;
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+.article figure {
+  margin: 28px 0;
+}
+.article figcaption {
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 8px;
+}
+
+@media (max-width: 760px) {
+  .quick-columns {
+    grid-template-columns: 1fr;
+  }
+  .quick-top {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .button {
+    transition: none;
+  }
+}
+
+/* ── Project case studies (gate panels and Quick view) ─────────────────────────────────── */
+.case-summary {
+  font-size: 17px;
+  line-height: 1.55;
+  color: #2b3a40;
+  margin: 6px 0 0;
+}
+.case-media {
+  margin: 20px 0 22px;
+}
+.case-media .project-preview {
+  margin: 0;
+  background: #e7ecee;
+}
+.case-sections {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
+}
+.case-sections h3,
+.case-sections h4 {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #b30f1c;
+  margin: 0 0 8px;
+}
+.case-sections p {
+  font-size: 14px;
+  line-height: 1.65;
+  margin: 0;
+}
+.case-results {
+  list-style: none;
+  margin: 24px 0 0;
+  padding: 18px 0 0;
+  border-top: 1px solid var(--line);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 22px;
+}
+.case-results li {
+  position: relative;
+  padding-left: 18px;
+  font-size: 14px;
+  line-height: 1.45;
+  color: #20292d;
+}
+.case-results li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.5em;
+  width: 7px;
+  height: 7px;
+  border-radius: 2px;
+  background: #d5121e;
+}
+.case-stack {
+  list-style: none;
+  margin: 18px 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.case-stack li {
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  padding: 5px 9px;
+  border-radius: 6px;
+  border: 1px solid var(--line);
+  color: #3b4b51;
+  background: #ffffffa8;
+}
+.case-study .panel-links {
+  margin-top: 22px;
+}
+@media (max-width: 700px) {
+  .case-sections,
+  .case-results {
+    grid-template-columns: 1fr;
+  }
+  .case-sections {
+    gap: 16px;
+  }
+}

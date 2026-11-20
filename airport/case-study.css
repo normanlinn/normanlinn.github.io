@@ -1,0 +1,88 @@
+/* ── Project case studies (gate panels and Quick view) ─────────────────────────────────── */
+.case-summary {
+  font-size: 17px;
+  line-height: 1.55;
+  color: #2b3a40;
+  margin: 6px 0 0;
+}
+.case-media {
+  margin: 20px 0 22px;
+}
+.case-media .project-preview {
+  margin: 0;
+  background: #e7ecee;
+}
+.case-sections {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
+}
+.case-sections h3,
+.case-sections h4 {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #b30f1c;
+  margin: 0 0 8px;
+}
+.case-sections p {
+  font-size: 14px;
+  line-height: 1.65;
+  margin: 0;
+}
+.case-results {
+  list-style: none;
+  margin: 24px 0 0;
+  padding: 18px 0 0;
+  border-top: 1px solid var(--line);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 22px;
+}
+.case-results li {
+  position: relative;
+  padding-left: 18px;
+  font-size: 14px;
+  line-height: 1.45;
+  color: #20292d;
+}
+.case-results li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.5em;
+  width: 7px;
+  height: 7px;
+  border-radius: 2px;
+  background: #d5121e;
+}
+.case-stack {
+  list-style: none;
+  margin: 18px 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.case-stack li {
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  padding: 5px 9px;
+  border-radius: 6px;
+  border: 1px solid var(--line);
+  color: #3b4b51;
+  background: #ffffffa8;
+}
+.case-study .panel-links {
+  margin-top: 22px;
+}
+@media (max-width: 700px) {
+  .case-sections,
+  .case-results {
+    grid-template-columns: 1fr;
+  }
+  .case-sections {
+    gap: 16px;
+  }
+}

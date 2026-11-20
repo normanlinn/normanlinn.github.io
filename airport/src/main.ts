@@ -9,57 +9,11 @@ import { boardingPassMarkup, mountBoardingPass } from './boarding-pass';
 import { terminalMaterials } from './materials';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
 import { flightPose, AIRCRAFT_GROUND_Y, type FlightKind } from './flight';
+import { projects, projectById, type ProjectId } from './projects';
+import { caseStudyMarkup, playClips } from './case-study';
 
 function initTerminal() {
   type StationId = 'lax' | 'yay' | 'tea' | 'calc' | 'about' | 'skills' | 'lounge';
-  type Project = {
-    gate: string;
-    name: string;
-    kind: string;
-    description: string;
-    image: string;
-    url: string;
-    source?: string;
-  };
-  const projects: Record<string, Project> = {
-    lax: {
-      gate: 'E42',
-      name: 'LAXCommute',
-      kind: 'TypeScript / Web app',
-      description: 'Employee shuttle information for LAX, built from an everyday problem I knew firsthand.',
-      image: 'work-lax-desktop.jpg',
-      url: 'https://employeeshuttlelax.com/',
-      source: 'https://github.com/normanlinn/LAXCommute',
-    },
-    yay: {
-      gate: 'E43',
-      name: 'Yay Kyaw Nights',
-      kind: 'TypeScript / 3D experience',
-      description:
-        'A browser-based night fair inspired by Yangon. Explore the world, its rides, and its atmosphere.',
-      image: 'work-yaykyaw-desktop.jpg',
-      url: 'https://yaykyawfair.vercel.app/',
-      source: 'https://github.com/normanlinn/yaykyawfair',
-    },
-    tea: {
-      gate: 'E44',
-      name: 'Burman Tea',
-      kind: 'TypeScript / Shop website',
-      description: 'A website for a Burmese tea shop in Los Angeles, bringing familiar flavors to the web.',
-      image: 'work-tea-desktop.jpg',
-      url: 'https://burmantea.vercel.app/',
-    },
-    calc: {
-      gate: 'E45',
-      name: 'Derivatives Field Guide',
-      kind: 'TypeScript / Learning tool',
-      description:
-        'An interactive calculus study guide with worked examples, graphs, and practice questions.',
-      image: 'work-calc-desktop.jpg',
-      url: 'https://normanlinn.github.io/calculus-study-site/',
-      source: 'https://github.com/normanlinn/calculus-study-site',
-    },
-  };
   const $ = <T extends HTMLElement>(selector: string) => document.querySelector<T>(selector)!;
   const canvas = $<HTMLCanvasElement>('#terminal'),
     arrival = $('#arrival'),
@@ -574,7 +528,7 @@ function initTerminal() {
   }
   const textureLoader = new THREE.TextureLoader();
   function kiosk(id: string, x: number) {
-    const p = projects[id];
+    const p = projectById[id as ProjectId];
     const group = new THREE.Group();
     group.position.set(x, 0, -18);
     scene.add(group);
@@ -615,7 +569,8 @@ function initTerminal() {
   boardGroup.position.set(-16, 2.35, -5);
   scene.add(boardGroup);
   box(8.15, 2.5, 0.2, mats.ink, 0, 0, 0, boardGroup);
-  Object.entries(projects).forEach(([id, p], i) => {
+  projects.forEach((p, i) => {
+    const id = p.id;
     const row = label(p.gate + '   ' + p.name, 7.8, 0.48, {
       background: i === 0 ? '#b80f1a' : '#252a2e',
       size: 47,
@@ -823,30 +778,10 @@ function initTerminal() {
   function openStation(id: StationId) {
     if (directory.open) directory.close();
     const container = $('#detail-content');
-    const p = projects[id];
+    const p = projectById[id as ProjectId];
     if (p) {
-      container.innerHTML =
-        '<span class="gate-tag">GATE ' +
-        p.gate +
-        '</span><h2>' +
-        p.name +
-        '</h2><p class="panel-kind">' +
-        p.kind +
-        '</p><p>' +
-        p.description +
-        '</p><img class="project-preview" width="1440" height="900" src="assets/' +
-        p.image +
-        '" alt="' +
-        p.name +
-        ' desktop preview"><div class="panel-links"><a class="button primary" href="' +
-        p.url +
-        '" target="_blank" rel="noopener noreferrer">Visit live site <span>↗</span></a>' +
-        (p.source
-          ? '<a class="button secondary" href="' +
-            p.source +
-            '" target="_blank" rel="noopener noreferrer">View source</a>'
-          : '') +
-        '</div>';
+      container.innerHTML = caseStudyMarkup(p, 'assets/');
+      playClips(container, reduced.matches);
     } else if (id === 'about') {
       container.innerHTML =
         '<span class="gate-tag subtle">DEVELOPER PASS</span><div class="about-panel"><img src="assets/zaw-id-upright.webp" alt="Zaw Lin Naing"><div><h2>Hi, I’m Zaw Lin.</h2><p>A software developer based in Los Angeles, studying at El Camino College. Before writing code, I worked in aviation customer service at LAX. That experience led to LAXCommute, my first app.</p><p>I enjoy turning complex problems into simple, enjoyable experiences, with readable code and thoughtful interfaces.</p><div class="panel-links"><a class="button primary" href="assets/zaw-lin-naing-resume.pdf" target="_blank" rel="noopener">Read my résumé</a><a class="button secondary" href="https://github.com/normanlinn" target="_blank" rel="noopener noreferrer">GitHub</a></div></div></div>';
@@ -895,6 +830,8 @@ function initTerminal() {
   document
     .querySelectorAll<HTMLButtonElement>('.dialog-close')
     .forEach(b => b.addEventListener('click', () => b.closest('dialog')?.close()));
+  // A closed panel stops its project clip so it does not keep decoding in the background.
+  detail.addEventListener('close', () => detail.querySelectorAll('video').forEach(video => video.pause()));
   [detail, directory].forEach(dialog => {
     // Escape plays the same exit animation as the close button.
     dialog.addEventListener('cancel', event => {

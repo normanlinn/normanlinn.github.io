@@ -4,7 +4,9 @@
 
 He is open to remote or part-time web development work.
 
-- Portfolio: https://normanlinn.github.io/
+- Portfolio (interactive 3D terminal): https://normanlinn.github.io/
+- Quick view (case studies, résumé and contact on one page): https://normanlinn.github.io/quick/
+- Article: How I built a live LAX shuttle tracker: https://normanlinn.github.io/notes/laxcommute/
 - Email: mrzawlinnaing1001@gmail.com
 - GitHub: https://github.com/normanlinn
 - LinkedIn: https://www.linkedin.com/in/zawlinnaing
@@ -12,10 +14,10 @@ He is open to remote or part-time web development work.
 
 ## Projects
 
-- [LAXCommute](https://employeeshuttlelax.com/): an installable web app (PWA) with live LAX employee shuttle positions and arrival predictions for the South, East and West lots, in English, Spanish and Burmese. Built with React, TypeScript, Supabase and Cloudflare Workers. Source: https://github.com/normanlinn/LAXCommute
-- [Yay Kyaw Nights](https://yaykyawfair.vercel.app/): a walkable 3D night street fair inspired by Yangon's Yay Kyaw, with 12 zones, first-person rides, a Burmese-speaking crowd and browser-to-browser multiplayer over WebRTC. Built with TypeScript, Three.js and the Web Audio API. Source: https://github.com/normanlinn/yaykyawfair
-- [Burman Tea](https://burmantea.vercel.app/): a mobile-first website for a Burmese milk tea and matcha shop in Westwood, Los Angeles, with the menu, pickup hours and directions in English and Burmese.
-- [Derivatives Field Guide](https://normanlinn.github.io/calculus-study-site/): an interactive calculus study site with 77 practice problems, 8 draggable graphs and a practice quiz. Built with Next.js, TypeScript and KaTeX. Source: https://github.com/normanlinn/calculus-study-site
+- [LAXCommute](https://employeeshuttlelax.com/): an installable web app (PWA) with live LAX employee shuttle positions and arrival predictions for the South, East and West lots, in English, Spanish and Burmese, with 192 automated tests. Built with React, TypeScript, Supabase and Cloudflare Workers. Source: https://github.com/normanlinn/LAXCommute
+- [Yay Kyaw Nights](https://yaykyawfair.vercel.app/): a walkable 3D night street fair inspired by Yangon's Yay Kyaw, with 14 zones, first-person rides, a Burmese-speaking crowd and browser-to-browser multiplayer over WebRTC. Built with TypeScript, Three.js and the Web Audio API. Source: https://github.com/normanlinn/yaykyawfair
+- [Burman Tea](https://burmantea.vercel.app/): a mobile-first storefront and staff workspace for a Burmese milk tea and matcha shop in Westwood, Los Angeles, in English and Burmese. Prices are calculated on the server and staff roles are checked server-side. Built with Next.js, Supabase and Stripe.
+- [Derivatives Field Guide](https://normanlinn.github.io/calculus-study-site/): an interactive calculus study site that grew with a Math 190 class, covering 23 textbook sections from §2.8 to §5.5 with draggable graphs, worked examples, practice quizzes and a practice final. Built with Next.js, TypeScript and KaTeX. Source: https://github.com/normanlinn/calculus-study-site
 
 ## Skills
 
