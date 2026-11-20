@@ -1,0 +1,21 @@
+{
+  "name": "zln-terminal-prototype",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc --noEmit && node build.mjs",
+    "dev": "node serve.mjs",
+    "test": "node --test tests/flight.test.mjs",
+    "test:browser": "node tests/smoke.mjs"
+  },
+  "dependencies": {
+    "three": "*"
+  },
+  "devDependencies": {
+    "@types/three": "*",
+    "esbuild": "*",
+    "playwright": "^1.65.1",
+    "typescript": "*"
+  }
+}
