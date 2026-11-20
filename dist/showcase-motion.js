@@ -51,3 +51,29 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden){if(flight)
 const button=section.querySelector('.copy-email'),feedback=section.querySelector('.copy-feedback');let timer;
 button.addEventListener('click',async()=>{clearTimeout(timer);try{await navigator.clipboard.writeText('mrzawlinnaing1001@gmail.com');button.textContent='Copied!';feedback.textContent='Email address copied. Ready when you are.';if(!reduced.matches)button.animate([{transform:'scale(.94)'},{transform:'scale(1)'}],{duration:300,easing:'ease-out'});}catch{feedback.textContent='You can select the email address or click it to open your email app.';}timer=setTimeout(()=>{button.textContent='Copy email';feedback.textContent='';},3500);});
 })();
+(() => {
+const reduced=matchMedia('(prefers-reduced-motion: reduce)');
+let progressFrame=0;
+function progress(){progressFrame=0;const max=document.documentElement.scrollHeight-innerHeight;const value=max>0?Math.min(1,Math.max(0,scrollY/max)):0;document.documentElement.style.setProperty('--flight-progress',String(value));}
+function requestProgress(){if(!progressFrame)progressFrame=requestAnimationFrame(progress);}
+window.addEventListener('scroll',requestProgress,{passive:true});
+window.addEventListener('resize',requestProgress,{passive:true});
+new ResizeObserver(requestProgress).observe(document.body);
+document.fonts.ready.then(requestProgress);requestProgress();
+const route=document.querySelector('.origin-route');
+if(route){const io=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){route.classList.add('is-route-visible');io.unobserve(route);}}),{threshold:.4});io.observe(route);}
+const hero=document.querySelector('.hero'),path=document.querySelector('.hero-flight-path'),craft=document.querySelector('.hero-flight-craft');
+if(!hero||!path||!craft)return;
+const length=path.getTotalLength();let visible=false,frame=0,start=0,elapsed=0;
+function stop(){if(frame)cancelAnimationFrame(frame);frame=0;start=0;}
+function render(time){frame=0;if(reduced.matches||!visible||document.hidden)return;if(!start)start=time-elapsed;elapsed=time-start;
+const fraction=(elapsed%15000)/15000;const point=path.getPointAtLength(fraction*length),ahead=path.getPointAtLength(Math.min(length,fraction*length+2));
+const angle=Math.atan2(ahead.y-point.y,ahead.x-point.x)*180/Math.PI+90;
+craft.setAttribute('transform','translate('+point.x+' '+point.y+') rotate('+angle+')');
+craft.style.opacity=String(Math.min(1,fraction*12,(1-fraction)*12));
+frame=requestAnimationFrame(render);
+}
+function sync(){stop();if(visible&&!reduced.matches&&!document.hidden)frame=requestAnimationFrame(render);}
+new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;sync();},{threshold:0}).observe(hero);
+reduced.addEventListener('change',sync);document.addEventListener('visibilitychange',sync);
+})();

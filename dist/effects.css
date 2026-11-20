@@ -187,3 +187,35 @@ header nav.has-motion-indicator a.nav-active,header nav.has-motion-indicator a.n
 
 #contact h2 em{margin-left:.12em}
 #contact .pass-links a{white-space:nowrap;font-size:12px}
+
+/* Aviation runs through the page as a route, not a layer over the content. */
+:root{--flight-progress:0}
+.reading-progress{display:none}
+.hero-airspace{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0;color:var(--muted);opacity:.36}
+.hero-flight-map{position:absolute;width:100%;height:100%;inset:0;object-fit:cover}
+.hero-flight-path{opacity:.45}
+.hero-flight-craft{opacity:0}
+.airspace-caption{position:absolute;right:7%;bottom:15%;font-size:9px;line-height:1.8;letter-spacing:.16em}
+.flight-scroll-track{position:absolute;left:0;right:0;bottom:-1px;height:2px;pointer-events:none;overflow:visible}
+.flight-scroll-trail{display:block;height:1px;width:100%;transform:scaleX(var(--flight-progress));transform-origin:left;background:var(--text);opacity:.55}
+.flight-scroll-plane{position:absolute;top:-8px;left:clamp(10px,calc(var(--flight-progress) * 100%),calc(100% - 20px));width:18px;height:18px;transform:rotate(90deg);color:var(--text)}
+.flight-scroll-plane svg,.flight-rail-plane svg{display:block;width:100%;height:100%}
+.flight-rail{display:none}
+.origin-route{display:grid;grid-template-columns:auto minmax(60px,100px) auto;gap:8px 20px;align-items:center;width:max-content;max-width:100%;margin-top:32px;padding-top:24px;border-top:1px solid var(--line)}
+.origin-route b{display:block;font-size:24px;line-height:1.2;letter-spacing:-.04em;font-weight:500}
+.origin-route span{display:block;font-size:11px;color:var(--muted);margin-top:5px}
+.origin-route>div:nth-child(3){text-align:right}
+.origin-route-line{position:relative;width:100%;height:1px;border-top:1px dashed var(--muted)}
+.origin-route-line svg{position:absolute;top:-12px;left:0;width:24px;height:24px;transform:rotate(90deg);background:var(--bg);padding:3px}
+.origin-route p{grid-column:1 / -1;font-size:12px;color:var(--muted);line-height:1.7;margin-top:12px}
+.origin-route.is-route-visible .origin-route-line svg{animation:origin-flight 1.6s cubic-bezier(.22,1,.36,1) both}
+#work .project-meta::before{content:'';display:block;width:72px;height:8px;margin-bottom:4px;background:repeating-linear-gradient(90deg,var(--muted) 0 9px,transparent 9px 17px);opacity:.4;transform-origin:left}
+#work .real-project:hover .project-meta::before{animation:runway-lights 1.4s linear infinite}
+.return-flight{display:inline-flex;align-items:center;gap:10px}
+.return-flight svg{width:19px;height:19px;transform:rotate(35deg);transition:transform .5s cubic-bezier(.22,1,.36,1)}
+.return-flight:hover svg{transform:translate(4px,-5px) rotate(35deg)}
+@media(min-width:1200px){.flight-rail{display:block;position:fixed;right:18px;top:125px;bottom:65px;width:22px;z-index:10;color:var(--muted);pointer-events:none}.flight-rail-line{position:absolute;left:10px;top:55px;bottom:25px;border-left:1px dashed var(--line)}.flight-rail-label{position:absolute;left:6px;top:0;writing-mode:vertical-rl;font-size:8px;letter-spacing:.18em}.flight-rail-plane{position:absolute;top:calc(55px + var(--flight-progress) * (100% - 100px));left:-1px;width:24px;height:24px;transform:rotate(180deg);color:var(--text);background:var(--bg);padding:3px}.flight-rail-end{position:absolute;bottom:0;left:0;font-size:8px;letter-spacing:.08em}}
+@media(max-width:700px){.hero-airspace{opacity:.22}.airspace-caption{display:none}.origin-route{margin-top:24px}.flight-scroll-plane{width:15px;height:15px;top:-7px}}
+@keyframes origin-flight{from{left:0;opacity:0}25%{opacity:1}to{left:calc(100% - 24px);opacity:1}}
+@keyframes runway-lights{to{background-position:34px 0}}
+@media(prefers-reduced-motion:reduce){.hero-flight-craft{display:none}.origin-route.is-route-visible .origin-route-line svg,#work .real-project:hover .project-meta::before{animation:none}.origin-route-line svg{left:calc(100% - 24px)}.return-flight svg{transition:none}.flight-scroll-plane,.flight-rail-plane{display:none}}
