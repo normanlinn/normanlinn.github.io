@@ -1,11 +1,13 @@
 {
   "name": "portfolio",
   "version": "1.0.0",
-  "description": "Zaw Lin Naing’s portfolio: static HTML/CSS with TypeScript, built with esbuild and published with GitHub Pages.",
+  "description": "Zaw Lin Naing\u2019s portfolio: static HTML/CSS with TypeScript, built with esbuild and published with GitHub Pages.",
   "scripts": {
     "typecheck": "tsc --noEmit",
     "build": "npm run typecheck && esbuild src/script.ts src/motion.ts --bundle --minify --format=iife --outdir=dist && node scripts/prepare-pages.mjs",
-    "test": "node --test tests/*.test.mjs"
+    "test": "node --test tests/*.test.mjs",
+    "airport:build": "npm --prefix airport run build",
+    "airport:dev": "npm --prefix airport run dev"
   },
   "keywords": [],
   "author": "",
