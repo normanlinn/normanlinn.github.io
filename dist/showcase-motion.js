@@ -31,3 +31,23 @@ entry.target.querySelectorAll('.project-meta > *').forEach((part,index)=>{const 
 }),{threshold:.15});
 document.querySelectorAll('#work .real-project').forEach(card=>observer.observe(card));
 })();
+(() => {
+const section=document.querySelector('#contact');if(!section)return;
+const reduced=matchMedia('(prefers-reduced-motion: reduce)');
+const plane=section.querySelector('.flight-plane');
+let flight,seen=false;
+function startFlight(){if(flight)flight.cancel();if(reduced.matches||!section.classList.contains('is-contact-visible'))return;
+flight=plane.animate([{transform:'translate(2px,20px) rotate(-24deg)',opacity:0},{transform:'translate(15px,14px) rotate(-18deg)',opacity:1,offset:.15},{transform:'translate(60px,6px) rotate(0deg)',opacity:1,offset:.5},{transform:'translate(106px,14px) rotate(18deg)',opacity:1,offset:.85},{transform:'translate(118px,20px) rotate(24deg)',opacity:0}],{duration:4200,iterations:Infinity,easing:'linear'});
+}
+const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{
+section.classList.toggle('is-contact-visible',entry.isIntersecting);startFlight();
+if(!entry.isIntersecting||seen||reduced.matches)return;seen=true;
+const elements=[section.querySelector('.contact-message'),section.querySelector('.boarding-pass')];
+elements.forEach((el,index)=>{const a=el.animate([{opacity:0,transform:'translateY(36px)'},{opacity:1,transform:'translateY(0)'}],{duration:850,delay:index*150,fill:'backwards',easing:'cubic-bezier(.22,1,.36,1)'});a.id='contact-reveal';});
+section.querySelectorAll('.pass-head,.pass-route,.pass-grid,.pass-main .pill,.pass-stub').forEach((el,index)=>{const a=el.animate([{opacity:0,transform:'translateY(12px)'},{opacity:1,transform:'translateY(0)'}],{duration:600,delay:250+index*90,fill:'backwards',easing:'ease-out'});a.id='contact-reveal';});
+}),{threshold:.15});observer.observe(section);
+reduced.addEventListener('change',()=>{document.getAnimations().filter(a=>a.id==='contact-reveal').forEach(a=>a.finish());startFlight();});
+document.addEventListener('visibilitychange',()=>{if(document.hidden){if(flight)flight.pause();}else startFlight();});
+const button=section.querySelector('.copy-email'),feedback=section.querySelector('.copy-feedback');let timer;
+button.addEventListener('click',async()=>{clearTimeout(timer);try{await navigator.clipboard.writeText('mrzawlinnaing1001@gmail.com');button.textContent='Copied!';feedback.textContent='Email address copied. Ready when you are.';if(!reduced.matches)button.animate([{transform:'scale(.94)'},{transform:'scale(1)'}],{duration:300,easing:'ease-out'});}catch{feedback.textContent='You can select the email address or click it to open your email app.';}timer=setTimeout(()=>{button.textContent='Copy email';feedback.textContent='';},3500);});
+})();

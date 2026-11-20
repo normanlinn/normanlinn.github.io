@@ -148,3 +148,42 @@ header nav.has-motion-indicator a.nav-active,header nav.has-motion-indicator a.n
 #work .project-meta::after{transition:padding-left .35s,border-color .35s}
 @media(hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){#work .real-project:hover .work-art{transform:scale(1.035)}#work .real-project:hover .project-meta::after{padding-left:10px}}
 @media(prefers-reduced-motion:reduce){#work .work-art,header nav a{transition:none!important}}
+
+/* Contact: an invitation with a moving route and a tactile ticket. */
+#contact{position:relative;overflow:hidden;padding-top:100px;padding-bottom:100px}
+#contact>.eyebrow{margin-bottom:36px;font-size:11px;letter-spacing:.14em}
+#contact .contact-layout{display:grid;grid-template-columns:minmax(0,.95fr) minmax(0,1.1fr);gap:clamp(32px,5vw,80px);align-items:center}
+#contact .contact-message{min-width:0}
+#contact h2{font-size:clamp(42px,4.4vw,70px);line-height:1.04;letter-spacing:-.05em;margin:0;color:var(--text)}
+#contact h2 em{font-family:'Instrument Serif',Georgia,serif;font-weight:400;color:var(--muted)}
+#contact .contact-description{font-size:16px;line-height:1.8;max-width:44ch;margin-top:26px;color:var(--muted)}
+#contact .contact-direct{display:flex;align-items:center;flex-wrap:wrap;gap:14px 20px;margin-top:28px}
+#contact .contact-direct>a{font-size:14px;overflow-wrap:anywhere;border-bottom:1px solid var(--line);padding:8px 0}
+#contact .copy-email{background:transparent;border:1px solid var(--line);border-radius:100px;padding:10px 16px;font-size:12px;line-height:1.4;transition:background-color .25s,color .25s,border-color .25s}
+#contact .copy-email:hover,#contact .copy-email:focus-visible{background:var(--text);color:var(--bg);border-color:var(--text)}
+#contact .copy-feedback{display:block;min-height:24px;font-size:12px;margin-top:8px;color:var(--muted)}
+#contact .contact-note{display:flex;flex-wrap:wrap;gap:10px 24px;padding-top:22px;margin-top:14px;border-top:1px solid var(--line);font-size:10px;letter-spacing:.12em;color:var(--muted)}
+#contact .boarding-pass{width:100%;min-width:0;grid-template-columns:minmax(0,1fr) 128px;box-shadow:0 18px 60px #00000006;transition:border-color .4s,box-shadow .4s}
+#contact .boarding-pass::before,#contact .boarding-pass::after{right:128px}
+#contact .pass-main{padding:28px;gap:28px;min-width:0}
+#contact .pass-stub{padding:28px 18px}
+#contact .pass-route{gap:12px}
+#contact .pass-route b{font-size:clamp(30px,3vw,44px)}
+#contact .pass-route small{font-size:11px}
+#contact .pass-grid{grid-template-columns:1fr 1fr;gap:18px 20px}
+#contact .pass-grid dd{font-size:13px;line-height:1.6}
+#contact .pass-path{overflow:visible;color:var(--text)}
+#contact .flight-plane{transform:translate(60px,6px)}
+#contact .pass-code{position:relative;overflow:hidden}
+#contact .pass-code::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,var(--pass-paper),transparent);transform:translateX(-110%);opacity:.8}
+#contact .pass-main .pill{font-size:13px;min-height:44px;padding:12px 20px;transition:box-shadow .3s,background-color .3s}
+#contact .boarding-pass:hover{border-color:var(--muted);box-shadow:0 20px 60px #00000010}
+#contact .pass-links a{position:relative;transition:padding-left .3s}
+#contact .pass-links a:hover{padding-left:5px}
+@media(max-width:1100px){#contact .contact-layout{grid-template-columns:1fr;gap:36px}#contact .contact-message{max-width:680px}#contact .boarding-pass{max-width:760px}#contact h2{font-size:64px}#contact .pass-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:600px){#contact{padding-top:70px;padding-bottom:70px}#contact>.eyebrow{margin-bottom:26px}#contact h2{font-size:clamp(42px,11vw,60px)}#contact .contact-description{font-size:15px;margin-top:22px}#contact .boarding-pass{grid-template-columns:1fr}#contact .boarding-pass::before,#contact .boarding-pass::after{display:none}#contact .pass-main{padding:24px;gap:24px}#contact .pass-grid{grid-template-columns:1fr 1fr}#contact .pass-stub{border-left:0;border-top:1.5px dashed var(--line);padding:20px 24px;display:grid;grid-template-columns:1fr auto;gap:12px}#contact .pass-admit{grid-column:1 / -1}#contact .pass-links{display:flex;flex-wrap:wrap;gap:16px}#contact .pass-code{width:70px;height:32px}#contact .contact-direct{gap:10px}}
+@media(prefers-reduced-motion:no-preference){#contact.is-contact-visible .pass-code::after{animation:ticket-scan 4.5s ease-in-out 3}#contact .pass-main .pill:hover{box-shadow:0 0 0 5px var(--contact)}}
+@keyframes ticket-scan{0%,30%{transform:translateX(-110%)}75%,100%{transform:translateX(110%)}}
+
+#contact h2 em{margin-left:.12em}
+#contact .pass-links a{white-space:nowrap;font-size:12px}
