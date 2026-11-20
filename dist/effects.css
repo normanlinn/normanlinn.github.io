@@ -139,3 +139,12 @@ header nav a.nav-active,header nav a.nav-active:hover{background:var(--text);col
 main section[id]{scroll-margin-top:100px}
 @media(max-width:1000px){header{gap:16px;padding:0 4%}header>.brand{font-size:10px}header nav a{padding:8px 13px}}
 @media(max-width:700px){body{padding-top:116px}html{scroll-padding-top:132px}header{height:116px;grid-template-columns:1fr auto;grid-template-rows:36px 44px;gap:10px 16px;padding:12px 5%}header>.brand{font-size:10px}header>.theme{grid-column:2;grid-row:1;width:32px;height:32px}header nav{grid-column:1 / -1;grid-row:2;width:100%;padding:0;gap:4px}header nav a{flex:1;min-height:44px;padding:8px 6px;font-size:12px}main section[id]{scroll-margin-top:132px}}
+
+header nav.has-motion-indicator{position:relative}
+.nav-motion-indicator{position:absolute;top:0;left:0;border-radius:8px;background:var(--text);pointer-events:none;z-index:0}
+header nav.has-motion-indicator a{position:relative;z-index:1;transition:color .25s,background-color .25s}
+header nav.has-motion-indicator a.nav-active,header nav.has-motion-indicator a.nav-active:hover{background:transparent;color:var(--bg)}
+#work .work-art{transition:transform .85s cubic-bezier(.22,1,.36,1)}
+#work .project-meta::after{transition:padding-left .35s,border-color .35s}
+@media(hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){#work .real-project:hover .work-art{transform:scale(1.035)}#work .real-project:hover .project-meta::after{padding-left:10px}}
+@media(prefers-reduced-motion:reduce){#work .work-art,header nav a{transition:none!important}}
