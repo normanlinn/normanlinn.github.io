@@ -4,11 +4,11 @@
 
 He is open to remote or part-time web development work.
 
-- Portfolio: https://normanlinn.github.io/portfolio/
+- Portfolio: https://normanlinn.github.io/
 - Email: mrzawlinnaing1001@gmail.com
 - GitHub: https://github.com/normanlinn
 - LinkedIn: https://www.linkedin.com/in/zawlinnaing
-- Résumé (PDF): https://normanlinn.github.io/portfolio/assets/zaw-lin-naing-resume.pdf
+- Résumé (PDF): https://normanlinn.github.io/assets/zaw-lin-naing-resume.pdf
 
 ## Projects
 
