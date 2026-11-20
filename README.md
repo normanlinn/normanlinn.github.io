@@ -10,9 +10,9 @@
 | --- | --- |
 | Current published 3D portfolio | [normanlinn.github.io](https://normanlinn.github.io/) |
 | Preserved version before the 3D redesign | [`archive/pre-airport-3d-20261119`](https://github.com/normanlinn/normanlinn.github.io/tree/archive/pre-airport-3d-20261119) |
-| Airport development branch | [`feature/swiss-airport-3d`](https://github.com/normanlinn/normanlinn.github.io/tree/feature/swiss-airport-3d/airport) |
+| Earlier walkable prototype | [`feature/swiss-airport-3d`](https://github.com/normanlinn/normanlinn.github.io/tree/feature/swiss-airport-3d/airport) |
 
-The published portfolio is a walkable **Three.js + TypeScript** airport experience. The previous editorial version is preserved on the archive branch.
+The published portfolio is a scroll-guided **Three.js + TypeScript** airport experience. The previous editorial version is preserved on the archive branch.
 
 ## Explore the terminal
 
@@ -22,22 +22,22 @@ The published portfolio is a walkable **Three.js + TypeScript** airport experien
 - **Developer pass:** read about my path from aviation customer service at LAX to building software.
 - **First Class Lounge:** open a boarding-pass contact panel, copy my email, or view my résumé.
 
-There are moving luggage cases, opening security doors, a smooth airliner with animated engine fans and retracting gear, landing and takeoff sequences viewed through the terminal glass, smooth camera journeys, a pause-ambience control, and a directory that makes every destination accessible without walking.
+There are moving luggage cases, opening security doors, textured stone and wood finishes, soft environmental lighting, desktop floor reflections, a smooth airliner with animated engine fans and retracting gear, landing and takeoff sequences viewed through the terminal glass, smooth camera journeys, a pause-ambience control, and a directory for opening every project directly.
 
 ### Controls
 
 | Action | Desktop | Touch |
 | --- | --- | --- |
-| Walk | **W A S D** or arrow keys | Drag the left joystick |
-| Look | Drag the scene; optional **Mouse look** | Drag the scene |
-| Open a destination | Click a screen, or **E** when prompted nearby | Tap a screen or the interaction button |
-| Jump to an area | Top navigation | Top navigation |
-| Close a panel | **Escape** or the close button | Close button |
-| Release mouse look | **Escape** | — |
+| Travel through the terminal | Scroll wheel, trackpad, Page Down / Page Up | Swipe vertically |
+| Jump to a destination | Top navigation | Top navigation |
+| Open a project | Project gate buttons, directory, or a visible 3D screen | Tap the same buttons or screens |
+| Open contact details | First Class Lounge boarding-pass button | Tap the boarding-pass button |
+| Close a panel | Escape or close button | Close button |
+| See aircraft sequences | Watch runway, then Landing or Takeoff | Same controls |
 
-Choose **Watch runway** to reach the observation windows, then select **Landing**, **Takeoff**, or **Park aircraft**. Flights stay outside the terminal. **Pause ambience** also pauses the aircraft. Reduced-motion mode keeps ambient flight motion off; selecting a flight explicitly starts that sequence.
+The page is **scroll-only**: there are no walking keys, joystick, drag-to-look, or pointer-lock controls. The camera follows a curated route between Arrivals, Projects, My Story, Developer Desk, First Class Lounge, and Runway Observation.
 
-The **directory button** opens all projects and contact details directly. The prototype respects the system’s reduced-motion preference. **Pause ambience** stops the decorative luggage and route animation.
+Reduced-motion mode uses static camera cuts between destinations. Ambient luggage, route lights, and engine movement can be paused. Selecting a flight explicitly starts that aircraft sequence; Pause ambience pauses it too.
 
 ## Run the 3D portfolio
 
@@ -81,8 +81,9 @@ The build preserves the Google Search Console verification file, sitemap, résum
 
 | Path | Purpose |
 | --- | --- |
+| `airport/src/materials.ts` | Local stone/wood textures and environmental lighting |
 | `airport/src/aircraft.ts`, `airport/src/flight.ts` | Smooth aircraft geometry and deterministic landing/takeoff paths |
-| `airport/src/main.ts` | Scene geometry, lighting, walking, collisions, gate interactions, and panels |
+| `airport/src/main.ts` | Scene geometry, lighting, scroll-linked camera route, project interactions, and panels |
 | `airport/index.html` | Arrival UI, navigation, directory, and accessible fallback links |
 | `airport/site.css` | Responsive typography, rounded interface, panels, and transitions |
 | `airport/build.mjs` | Type checking/bundling output and local asset preparation |
@@ -106,16 +107,16 @@ The concept uses Swiss-inspired typography, white and charcoal surfaces, precise
 
 The image below is **art direction**, while the playable prototype uses original lightweight geometry. Matching the concept’s detailed architectural materials and character models is a later art pass.
 
-![SWISS-inspired airport portfolio visual concept](https://raw.githubusercontent.com/normanlinn/normanlinn.github.io/feature/swiss-airport-3d/airport/design/swiss-terminal-concept.png)
+![SWISS-inspired airport portfolio visual concept](https://raw.githubusercontent.com/normanlinn/normanlinn.github.io/main/airport/design/swiss-terminal-concept.png)
 
-### Playable prototype screenshot
+### Current portfolio screenshot
 
-![Current playable 3D prototype](https://raw.githubusercontent.com/normanlinn/normanlinn.github.io/feature/swiss-airport-3d/airport/design/prototype-desktop.png)
+![Scroll-guided 3D portfolio](https://raw.githubusercontent.com/normanlinn/normanlinn.github.io/main/airport/design/prototype-desktop.png)
 
 ## Validation
 
 - TypeScript check and production bundle.
-- Browser checks for WebGL rendering, keyboard walking, navigation, project links, copy-email feedback, and phone layout.
+- Browser checks for WebGL rendering, scroll-led camera movement, destination navigation, project links, copy-email feedback, and phone layout.
 - Reduced-motion mode, optional ambient animation, and an accessible destination directory.
 
 ## Ownership
