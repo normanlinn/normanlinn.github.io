@@ -8,11 +8,11 @@
 
 | Version | Where to find it |
 | --- | --- |
-| Current published portfolio | [normanlinn.github.io](https://normanlinn.github.io/) |
+| Current published 3D portfolio | [normanlinn.github.io](https://normanlinn.github.io/) |
 | Preserved version before the 3D redesign | [`archive/pre-airport-3d-20261119`](https://github.com/normanlinn/normanlinn.github.io/tree/archive/pre-airport-3d-20261119) |
-| New walkable airport prototype | [`feature/swiss-airport-3d`](https://github.com/normanlinn/normanlinn.github.io/tree/feature/swiss-airport-3d/airport) |
+| Airport development branch | [`feature/swiss-airport-3d`](https://github.com/normanlinn/normanlinn.github.io/tree/feature/swiss-airport-3d/airport) |
 
-The airport is an experimental, playable **Three.js + TypeScript** experience. It is being developed separately from the published site.
+The published portfolio is a walkable **Three.js + TypeScript** airport experience. The previous editorial version is preserved on the archive branch.
 
 ## Explore the terminal
 
@@ -39,13 +39,11 @@ Choose **Watch runway** to reach the observation windows, then select **Landing*
 
 The **directory button** opens all projects and contact details directly. The prototype respects the system’s reduced-motion preference. **Pause ambience** stops the decorative luggage and route animation.
 
-## Run the 3D prototype
+## Run the 3D portfolio
 
-Use a recent Node.js release. Switch to the prototype branch, then run these commands from the repository root:
+Tested with Node.js 24. From the repository root:
 
 ```sh
-git fetch origin
-git switch feature/swiss-airport-3d
 npm --prefix airport ci
 npm run airport:build
 npm run airport:dev
@@ -69,6 +67,16 @@ npm run test:browser
 
 Set `CHROME_PATH` to use an already installed Chrome executable.
 
+## Publish
+
+The existing GitHub Pages workflow deploys the committed `docs/` folder. After changing the airport source, install its locked dependencies, run the tests and production build, then commit the generated `airport/dist/`, `dist/`, and `docs/` files before pushing main.
+
+```sh
+npm run build
+```
+
+The build preserves the Google Search Console verification file, sitemap, résumé, and search metadata.
+
 ## Source map
 
 | Path | Purpose |
@@ -79,7 +87,9 @@ Set `CHROME_PATH` to use an already installed Chrome executable.
 | `airport/site.css` | Responsive typography, rounded interface, panels, and transitions |
 | `airport/build.mjs` | Type checking/bundling output and local asset preparation |
 | `airport/design/` | Visual concept and prototype screenshots |
-| `src/`, `dist/`, `docs/` | Existing published portfolio and its build output |
+| `dist/`, `docs/` | Production airport site, search metadata, verification file, and static assets |
+| `scripts/publish-airport.mjs` | Prepare the production GitHub Pages folder |
+| `src/` | Earlier editorial implementation, retained for reference |
 
 ## Real projects
 

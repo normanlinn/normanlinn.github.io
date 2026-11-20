@@ -1,11 +1,11 @@
 {
   "name": "portfolio",
   "version": "1.0.0",
-  "description": "Zaw Lin Naing\u2019s portfolio: static HTML/CSS with TypeScript, built with esbuild and published with GitHub Pages.",
+  "description": "Zaw Lin Naing\u2019s walkable 3D airport portfolio, built with Three.js and TypeScript.",
   "scripts": {
-    "typecheck": "tsc --noEmit",
-    "build": "npm run typecheck && esbuild src/script.ts src/motion.ts --bundle --minify --format=iife --outdir=dist && node scripts/prepare-pages.mjs",
-    "test": "node --test tests/*.test.mjs",
+    "typecheck": "npm --prefix airport run typecheck",
+    "build": "npm --prefix airport run build && node scripts/publish-airport.mjs",
+    "test": "npm --prefix airport test",
     "airport:build": "npm --prefix airport run build",
     "airport:dev": "npm --prefix airport run dev"
   },
