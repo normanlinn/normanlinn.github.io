@@ -135,6 +135,56 @@ try {
   assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
   assert.deepEqual(errors, []);
   await page.close();
+
+  // Most visitors have animations on. Load with motion several times: a timing bug (negative frame
+  // delta on the first frame) only showed up on some loads and threw on every frame afterwards.
+  for (let attempt = 1; attempt <= 4; attempt++) {
+    const moving = await browser.newPage({ viewport: { width: 1280, height: 800 }, reducedMotion: 'no-preference' });
+    const motionErrors = [];
+    moving.on('pageerror', error => motionErrors.push(error.message));
+    await moving.goto(base, { waitUntil: 'networkidle' });
+    await moving.waitForFunction(() => window.terminalState?.ready);
+    await moving.waitForTimeout(600);
+    await moving.mouse.wheel(0, 700);
+    await moving.waitForTimeout(900);
+    assert.deepEqual(motionErrors, [], `Errors with motion on (load ${attempt})`);
+    await moving.close();
+  }
+
+  // Every card must stay clear of the top and bottom bars at common laptop and phone sizes.
+  for (const viewport of [
+    { width: 1280, height: 720 },
+    { width: 1024, height: 768 },
+    { width: 390, height: 844 },
+    { width: 360, height: 640 },
+  ]) {
+    const sized = await browser.newPage({ viewport, reducedMotion: 'reduce' });
+    await sized.goto(base, { waitUntil: 'networkidle' });
+    await sized.waitForFunction(() => window.terminalState?.ready);
+    for (const id of ['arrival', 'projects', 'about', 'skills', 'lounge']) {
+      await sized.evaluate(id => document.getElementById(id).scrollIntoView({ block: 'start' }), id);
+      await sized.waitForTimeout(150);
+      const hidden = await sized.evaluate(id => {
+        const top = document.querySelector('.topbar').getBoundingClientRect();
+        const bottom = document.querySelector('.bottom-bar').getBoundingClientRect();
+        const covered = [];
+        // Headings and actions must be visible without scrolling inside the card. Body text may scroll.
+        for (const el of document.getElementById(id).querySelectorAll('h1, h2, a.button, button, .section-wayfinding')) {
+          const box = el.getBoundingClientRect();
+          const style = getComputedStyle(el);
+          if (!box.width || !box.height || style.visibility === 'hidden' || style.opacity === '0') continue;
+          const card = el.closest('.station-card')?.getBoundingClientRect();
+          const visibleBottom = Math.min(bottom.top, card ? card.bottom : Infinity);
+          const visibleTop = Math.max(top.bottom, card ? card.top : -Infinity);
+          if (box.bottom > visibleBottom + 1 || box.top < visibleTop - 1) covered.push(el.textContent.trim().slice(0, 40));
+        }
+        return covered;
+      }, id);
+      assert.deepEqual(hidden, [], `${viewport.width}x${viewport.height} ${id}: covered by a bar`);
+    }
+    await sized.close();
+  }
+
   const fallback = await browser.newPage();
   await fallback.addInitScript(() => {
     const original = HTMLCanvasElement.prototype.getContext;
@@ -148,7 +198,7 @@ try {
   await fallback.locator('#directory [data-directory="about"]').click();
   await fallback.locator('#detail').waitFor({ state: 'visible' });
   console.log(
-    'Passed: scroll-led camera, no walking controls, six destinations, project links, email copy, flights, pause, mobile layout, and WebGL fallback.',
+    'Passed: scroll-led camera, no walking controls, six destinations, project links, email copy, flights, pause, mobile layout, motion-on loads, cards clear of the bars at 4 sizes, and WebGL fallback.',
   );
 } finally {
   await browser.close();

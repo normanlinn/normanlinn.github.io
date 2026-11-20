@@ -3046,3 +3046,99 @@ button,
 button {
   overflow: hidden;
 }
+
+/* ── Fit every card on screen ─────────────────────────────────────────────────────────────
+   Cards are pinned in the middle of the viewport. On shorter screens (a 1280×720 laptop, small
+   phones) their content used to overflow into an inner scroll area, hiding the main button.
+   Type and spacing now scale with the viewport height, and each card's main action stays pinned
+   to the card's bottom edge if the text still has to scroll. */
+.journey .station-card {
+  --card-bg: #f1f4f5;
+  padding: clamp(20px, 3.6svh, 30px);
+}
+.journey .lounge-card {
+  --card-bg: #1b2731;
+}
+.station-card h1 {
+  font-size: clamp(36px, 7svh, 60px);
+  margin-bottom: clamp(10px, 2svh, 21px);
+}
+.station-card h2 {
+  font-size: clamp(25px, 4.4svh, 36px);
+  margin-bottom: clamp(10px, 2svh, 22px);
+}
+.station-card .eyebrow {
+  margin-bottom: clamp(10px, 2svh, 18px);
+}
+.station-card .arrival-subtitle {
+  font-size: clamp(18px, 3svh, 25px);
+  margin-bottom: clamp(10px, 2svh, 22px);
+}
+.station-card .arrival-description,
+.station-card .station-description {
+  margin: clamp(10px, 1.9svh, 18px) 0;
+  line-height: clamp(1.55, 0.2svh + 1.4, 1.8);
+}
+.station-card .arrival-footer {
+  margin-top: clamp(10px, 2svh, 20px);
+  padding-top: clamp(10px, 1.8svh, 18px);
+}
+.station-card .mini-pass {
+  margin: clamp(10px, 2svh, 20px) 0;
+  padding: clamp(10px, 1.8svh, 17px) 0;
+}
+.station-card .arrival-actions,
+.station-card > .button {
+  position: sticky;
+  bottom: 0;
+  z-index: 1;
+  box-shadow: 0 -16px 16px -4px var(--card-bg);
+}
+.station-card .arrival-actions {
+  background: var(--card-bg);
+  margin-inline: -2px;
+  padding: 4px 2px 2px;
+}
+
+/* The "02 / Project gates · Next / My story" label sits just above the bottom bar, not under it.
+   On phones the bottom bar already names the stop, so the label is hidden there. */
+.section-wayfinding {
+  position: fixed;
+  bottom: 94px;
+  transition: opacity 0.35s ease;
+}
+.journey-section:not(.is-current) .section-wayfinding {
+  opacity: 0;
+}
+@media (max-width: 700px) {
+  .section-wayfinding {
+    display: none;
+  }
+}
+
+/* Phones: centre cards in the space between the two bars and let them use nearly all of it. */
+@media (max-width: 700px) {
+  .journey .station-card,
+  .journey .card-right .station-card {
+    top: calc(50svh + 12px) !important;
+    max-height: calc(100svh - 232px);
+  }
+}
+/* Short phones (e.g. 360×640): compact gate buttons and a two-line introduction. */
+@media (max-width: 700px) and (max-height: 720px) {
+  .gate-list {
+    gap: 5px;
+    margin-top: 14px;
+  }
+  .gate-list button {
+    min-height: 42px;
+    padding: 7px 10px;
+  }
+  .station-card .station-description {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    overflow: hidden;
+  }
+}

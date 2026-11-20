@@ -938,7 +938,10 @@ function initTerminal() {
       lastTime = time;
       return;
     }
-    const dt = Math.min(0.1, (time - lastTime) / 1000);
+    // The first frame's timestamp can be earlier than the performance.now() taken at start-up, so a
+    // negative dt is possible. Clamp it: a negative `elapsed` sends routeCurve.getPointAt() below 0,
+    // which throws inside Three.js on every frame until it recovers.
+    const dt = THREE.MathUtils.clamp((time - lastTime) / 1000, 0, 0.1);
     lastTime = time;
     if (ambience && !reduced.matches) elapsed += dt;
     let segment = 0;
