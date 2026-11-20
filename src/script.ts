@@ -41,7 +41,7 @@ const actualProjects = [
   { title: 'LAXCommute', description: 'Employee shuttle information for LAX.', url: 'https://employeeshuttlelax.com/', source: 'https://github.com/normanlinn/LAXCommute' },
   { title: 'Yay Kyaw Nights', description: 'A browser-based night fair inspired by Yangon.', url: 'https://yaykyawfair.vercel.app/', source: 'https://github.com/normanlinn/yaykyawfair' },
   { title: 'Burman Tea', description: 'A website for a Burmese tea shop in Los Angeles.', url: 'https://burmantea.vercel.app/', source: null },
-  { title: 'Derivatives Field Guide', description: 'An interactive study guide covering calculus and derivative rules.', url: 'https://calculus-study-site.vercel.app/', source: 'https://github.com/normanlinn/calculus-study-site' },
+  { title: 'Derivatives Field Guide', description: 'An interactive study guide covering calculus and derivative rules.', url: 'https://normanlinn.github.io/calculus-study-site/', source: 'https://github.com/normanlinn/calculus-study-site' },
 ];
 document.querySelectorAll<HTMLButtonElement>('[data-project]').forEach(button => button.addEventListener('click', () => {
   const project = actualProjects[Number(button.dataset.project)];
