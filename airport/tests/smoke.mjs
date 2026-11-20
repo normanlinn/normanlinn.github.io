@@ -139,7 +139,10 @@ try {
   // Most visitors have animations on. Load with motion several times: a timing bug (negative frame
   // delta on the first frame) only showed up on some loads and threw on every frame afterwards.
   for (let attempt = 1; attempt <= 4; attempt++) {
-    const moving = await browser.newPage({ viewport: { width: 1280, height: 800 }, reducedMotion: 'no-preference' });
+    const moving = await browser.newPage({
+      viewport: { width: 1280, height: 800 },
+      reducedMotion: 'no-preference',
+    });
     const motionErrors = [];
     moving.on('pageerror', error => motionErrors.push(error.message));
     await moving.goto(base, { waitUntil: 'networkidle' });
@@ -148,6 +151,24 @@ try {
     await moving.mouse.wheel(0, 700);
     await moving.waitForTimeout(900);
     assert.deepEqual(motionErrors, [], `Errors with motion on (load ${attempt})`);
+    if (attempt === 1) {
+      // Panels animate closed, and reopening during that animation must leave them open.
+      const isOpen = () => moving.evaluate(() => document.querySelector('#directory').open);
+      const waitClosed = message =>
+        moving
+          .waitForFunction(() => !document.querySelector('#directory').open, null, { timeout: 8000 })
+          .catch(() => assert.fail(message));
+      await moving.locator('#directory-open').click();
+      await moving.locator('#directory .dialog-close').click();
+      await waitClosed('Directory did not close after its exit animation');
+      await moving.locator('#directory-open').click();
+      await moving.locator('#directory .dialog-close').click();
+      await moving.evaluate(() => document.querySelector('#directory-open').click());
+      await moving.waitForTimeout(1500);
+      assert.equal(await isOpen(), true, 'Reopening during the exit animation closed the directory');
+      await moving.keyboard.press('Escape');
+      await waitClosed('Escape did not close the directory');
+    }
     await moving.close();
   }
 
@@ -169,14 +190,17 @@ try {
         const bottom = document.querySelector('.bottom-bar').getBoundingClientRect();
         const covered = [];
         // Headings and actions must be visible without scrolling inside the card. Body text may scroll.
-        for (const el of document.getElementById(id).querySelectorAll('h1, h2, a.button, button, .section-wayfinding')) {
+        for (const el of document
+          .getElementById(id)
+          .querySelectorAll('h1, h2, a.button, button, .section-wayfinding')) {
           const box = el.getBoundingClientRect();
           const style = getComputedStyle(el);
           if (!box.width || !box.height || style.visibility === 'hidden' || style.opacity === '0') continue;
           const card = el.closest('.station-card')?.getBoundingClientRect();
           const visibleBottom = Math.min(bottom.top, card ? card.bottom : Infinity);
           const visibleTop = Math.max(top.bottom, card ? card.top : -Infinity);
-          if (box.bottom > visibleBottom + 1 || box.top < visibleTop - 1) covered.push(el.textContent.trim().slice(0, 40));
+          if (box.bottom > visibleBottom + 1 || box.top < visibleTop - 1)
+            covered.push(el.textContent.trim().slice(0, 40));
         }
         return covered;
       }, id);

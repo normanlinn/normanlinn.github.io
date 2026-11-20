@@ -3142,3 +3142,48 @@ button {
     overflow: hidden;
   }
 }
+
+/* ── Transitions ─────────────────────────────────────────────────────────────────────────── */
+/* The card being left drifts out in the direction of travel while it fades. */
+.journey .station-card {
+  transition:
+    opacity 0.35s ease,
+    visibility 0.35s,
+    translate 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 0.3s;
+}
+.journey .journey-section:not(.is-current) .station-card {
+  translate: 0 calc(var(--travel-dir, 1) * -16px);
+}
+/* Panel backdrops fade in and out with the panel. */
+dialog[open]::backdrop {
+  animation: backdrop-in 0.35s ease both;
+}
+dialog.is-closing::backdrop {
+  opacity: 0;
+  transition: opacity 0.22s ease;
+}
+@keyframes backdrop-in {
+  from {
+    opacity: 0;
+  }
+}
+/* Split-flap labels in the bottom bar. */
+#location,
+#journey-count,
+#journey-destination {
+  perspective: 240px;
+}
+.flip-text {
+  display: inline-block;
+  transform-origin: 50% 0;
+  backface-visibility: hidden;
+}
+@media (prefers-reduced-motion: reduce) {
+  .journey .journey-section:not(.is-current) .station-card {
+    translate: none;
+  }
+  dialog[open]::backdrop {
+    animation: none;
+  }
+}

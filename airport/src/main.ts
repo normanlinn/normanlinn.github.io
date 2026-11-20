@@ -70,6 +70,40 @@ function initTerminal() {
   let ambience = !reduced.matches,
     initialized = false;
 
+  // Panels animate out as well as in. A close that is still animating is cancelled if the same
+  // panel is reopened, so a panel never shuts itself after the visitor has opened it again.
+  const closing = new WeakMap<HTMLDialogElement, Animation>();
+  function openDialog(dialog: HTMLDialogElement) {
+    const pending = closing.get(dialog);
+    if (pending) {
+      pending.cancel();
+      closing.delete(dialog);
+      dialog.classList.remove('is-closing');
+    }
+    if (!dialog.open) dialog.showModal();
+  }
+  function closeDialog(dialog: HTMLDialogElement | null) {
+    if (!dialog?.open || closing.has(dialog)) return;
+    if (reduced.matches) {
+      dialog.close();
+      return;
+    }
+    dialog.classList.add('is-closing');
+    const exit = dialog.animate(
+      [
+        { opacity: 1, transform: 'none' },
+        { opacity: 0, transform: 'translateY(14px) scale(0.985)' },
+      ],
+      { duration: 220, easing: 'cubic-bezier(.4,0,1,1)' },
+    );
+    closing.set(dialog, exit);
+    exit.onfinish = () => {
+      closing.delete(dialog);
+      dialog.classList.remove('is-closing');
+      dialog.close();
+    };
+  }
+
   const scene = new THREE.Scene();
   scene.background = new THREE.Color('#dfe8ed');
   scene.fog = new THREE.Fog('#dfe7e9', 120, 350);
@@ -114,7 +148,7 @@ function initTerminal() {
       .forEach(b => b.addEventListener('click', () => openStation(b.dataset.directory as StationId)));
     document
       .querySelectorAll<HTMLButtonElement>('.dialog-close')
-      .forEach(b => b.addEventListener('click', () => b.closest('dialog')?.close()));
+      .forEach(b => b.addEventListener('click', () => closeDialog(b.closest('dialog'))));
     return;
   }
   const orbit = new OrbitControls(camera, canvas);
@@ -756,7 +790,7 @@ function initTerminal() {
     return detail.open || directory.open;
   }
   function openDirectory() {
-    if (!directory.open) directory.showModal();
+    openDialog(directory);
   }
   $('#directory-open').addEventListener('click', openDirectory);
   $('#fallback-directory').addEventListener('click', openDirectory);
@@ -852,7 +886,7 @@ function initTerminal() {
         }
       });
     }
-    if (!detail.open) detail.showModal();
+    openDialog(detail);
   }
 
   document
@@ -861,7 +895,12 @@ function initTerminal() {
   document
     .querySelectorAll<HTMLButtonElement>('.dialog-close')
     .forEach(b => b.addEventListener('click', () => b.closest('dialog')?.close()));
-  [detail, directory].forEach(dialog =>
+  [detail, directory].forEach(dialog => {
+    // Escape plays the same exit animation as the close button.
+    dialog.addEventListener('cancel', event => {
+      event.preventDefault();
+      closeDialog(dialog);
+    });
     dialog.addEventListener('click', event => {
       if (event.target === dialog) {
         const r = dialog.getBoundingClientRect();
@@ -871,10 +910,10 @@ function initTerminal() {
           event.clientY < r.top ||
           event.clientY > r.bottom
         )
-          dialog.close();
+          closeDialog(dialog);
       }
-    }),
-  );
+    });
+  });
   const raycaster = new THREE.Raycaster(),
     pointer = new THREE.Vector2();
   canvas.addEventListener('click', event => {
@@ -932,6 +971,46 @@ function initTerminal() {
       easing: 'cubic-bezier(.2,.8,.2,1)',
     });
   });
+  const easeOut = 'cubic-bezier(.22,1,.36,1)';
+  // The card glides in, then its contents follow one after another: eyebrow, title, text, actions.
+  function revealCard(card: HTMLElement, direction: number) {
+    card.animate(
+      [
+        { opacity: 0, translate: `0 ${18 * direction}px` },
+        { opacity: 1, translate: '0 0' },
+      ],
+      { duration: 600, easing: easeOut },
+    );
+    Array.from(card.children).forEach((child, index) =>
+      child.animate(
+        [
+          { opacity: 0, translate: `0 ${10 * direction}px` },
+          { opacity: 1, translate: '0 0' },
+        ],
+        { duration: 520, delay: 90 + index * 45, easing: easeOut, fill: 'backwards' },
+      ),
+    );
+  }
+  // Bottom-bar labels change like a split-flap departure board. The text itself is set directly,
+  // so screen readers and tests always read the final value.
+  function flipText(element: HTMLElement, text: string, animate: boolean) {
+    if (element.textContent === text) return;
+    if (!animate || reduced.matches) {
+      element.textContent = text;
+      return;
+    }
+    const next = document.createElement('span');
+    next.className = 'flip-text';
+    next.textContent = text;
+    element.replaceChildren(next);
+    next.animate(
+      [
+        { opacity: 0, transform: 'translateY(45%) rotateX(-75deg)' },
+        { opacity: 1, transform: 'none' },
+      ],
+      { duration: 420, easing: easeOut },
+    );
+  }
   function render(time: number) {
     requestAnimationFrame(render);
     if (document.hidden) {
@@ -967,6 +1046,10 @@ function initTerminal() {
       camera.quaternion.slerp(poseCamera.quaternion, damping);
     } else orbit.update();
     if (chapter !== lastChapter) {
+      // Cards leave and arrive in the direction of travel: up when scrolling forward, down when back.
+      const firstStop = lastChapter === -1;
+      const direction = chapter >= lastChapter ? 1 : -1;
+      document.documentElement.style.setProperty('--travel-dir', String(direction));
       lastChapter = chapter;
       if (chapter !== 5 && exploreView) setExploreView(false);
       if (chapter === 5 && requestedRunwayExplore) {
@@ -979,20 +1062,13 @@ function initTerminal() {
         card.inert = !active || (index === 5 && document.body.classList.contains('clear-window-view'));
         card.setAttribute('aria-hidden', String(card.inert));
         stop.element.classList.toggle('is-current', active);
-        if (active && !reduced.matches)
-          card.animate(
-            [
-              { opacity: 0, translate: '0 18px' },
-              { opacity: 1, translate: '0 0' },
-            ],
-            { duration: 650, easing: 'cubic-bezier(.22,1,.36,1)' },
-          );
+        if (active && !reduced.matches) revealCard(card, direction);
       });
       camera.fov = innerWidth < 700 && chapter === 5 ? 105 : 55;
       camera.updateProjectionMatrix();
-      $('#location').textContent = 'ZRH · ' + stops[chapter].label;
-      $('#journey-count').textContent = String(chapter + 1).padStart(2, '0') + ' / 06';
-      $('#journey-destination').textContent = stops[chapter].label;
+      flipText($('#location'), 'ZRH · ' + stops[chapter].label, !firstStop);
+      flipText($('#journey-count'), String(chapter + 1).padStart(2, '0') + ' / 06', !firstStop);
+      flipText($('#journey-destination'), stops[chapter].label, !firstStop);
       $('#runway-controls').hidden = chapter !== 5;
       document.querySelectorAll<HTMLButtonElement>('header [data-travel]').forEach(button => {
         const active = button.dataset.travel === stops[chapter].id;
