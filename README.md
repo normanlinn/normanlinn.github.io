@@ -41,9 +41,11 @@ The **directory button** opens all projects and contact details directly. The pr
 
 ## Run the 3D prototype
 
-Use a recent Node.js release. From the repository root:
+Use a recent Node.js release. Switch to the prototype branch, then run these commands from the repository root:
 
 ```sh
+git fetch origin
+git switch feature/swiss-airport-3d
 npm --prefix airport ci
 npm run airport:build
 npm run airport:dev
